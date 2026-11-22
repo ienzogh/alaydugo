@@ -7,7 +7,7 @@
     {
       id: "sample-1",
       title: "Community Blood Donation Drive",
-      image: "icons/sample1.jpg",
+      image: "sample_pics/sample1.jpg",
       date: "2026-12-05",
       organizer: "AlayDugo Volunteers",
       start: "08:00",
@@ -19,7 +19,7 @@
     {
       id: "sample-2",
       title: "Barangay Blood Donation Day",
-      image: "icons/sample2.jpg",
+      image: "sample_pics/sample2.jpg",
       date: "2026-12-12",
       organizer: "AlayDugo Student Volunteers",
       start: "09:00",
@@ -68,10 +68,10 @@
     if (raw) {
       try {
         var saved = JSON.parse(raw);
-        // Give the sample campaigns their pictures if they were saved without one
+        // The sample campaigns always use their pictures from the sample_pics folder
         saved.forEach(function (c) {
           SAMPLES.forEach(function (smp) {
-            if (c.id === smp.id && !c.image) c.image = smp.image;
+            if (c.id === smp.id) c.image = smp.image;
           });
         });
         return saved;

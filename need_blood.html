@@ -11,7 +11,7 @@
   <!-- Navbar -->
   <header>
     <div class="container nav">
-      <a href="index.html" class="brand" aria-label="AlayDugo home"><img src="icons/alaydugo-logo.jpg" alt="AlayDugo"></a>
+      <a href="index.html" class="brand"><span class="brand-logo"><img src="icons/alaydugo-logo.jpg" alt=""></span><span class="brand-name">AlayDugo</span></a>
       <button id="menu-toggle" aria-label="Toggle menu">☰</button>
       <ul id="links">
         <li><a href="about.html">About Us</a></li>
@@ -88,7 +88,7 @@
         </div>
 
         <!-- Sample donors (placeholder data, no database yet) -->
-        <p class="donor-count" id="donor-count">3 donors found</p>
+        <p class="donor-count" id="donor-count">4 donors found</p>
         <div class="donor-grid">
           <div class="donor-card" data-type="O+" data-loc="Cebu City, Cebu" data-avail="Available">
             <div class="donor-top">
@@ -110,7 +110,7 @@
               </div>
             </div>
             <p class="donor-loc">Mandaue City, Cebu</p>
-            <p class="donor-last">Last donated: Sep 15, 2026</p>
+            <p class="donor-last"><strong>Last donated:</strong> Sep 15, 2026</p>
             <button type="button" class="btn btn-inquiry" data-name="Maria S. L.">Send Inquiry</button>
           </div>
           <div class="donor-card" data-type="O-" data-loc="Consolacion, Cebu" data-avail="Unavailable">
@@ -124,6 +124,19 @@
             <p class="donor-loc">Consolacion, Cebu</p>
             <p class="donor-notes"><strong>Medical notes:</strong> Recently donated. Healthy, no current medications.</p>
             <button type="button" class="btn btn-inquiry" data-name="Carlo R. M.">Send Inquiry</button>
+          </div>
+          <div class="donor-card" data-type="AB+" data-loc="Liloan, Cebu" data-avail="Available">
+            <div class="donor-top">
+              <div class="badge-type">AB+</div>
+              <div>
+                <h3>Ana P. R.</h3>
+                <span class="badge-avail">Available</span>
+              </div>
+            </div>
+            <p class="donor-loc">Liloan, Cebu</p>
+            <p class="donor-last"><strong>Last donated:</strong> Oct 2, 2026</p>
+            <p class="donor-notes"><strong>Medical notes:</strong> Mild seasonal allergies, no current medications.</p>
+            <button type="button" class="btn btn-inquiry" data-name="Ana P. R.">Send Inquiry</button>
           </div>
         </div>
         <p class="donor-count" id="donor-empty" hidden>No donors match your search.</p>
@@ -160,6 +173,7 @@
         <h3>Verify to Become a Donor</h3>
         <button type="button" class="modal-x" aria-label="Close">×</button>
       </div>
+      <p class="modal-lead">After verifying, you will be displayed as a donor in Find Blood Donors.</p>
       <form id="verify-form" novalidate>
         <div class="field">
           <label class="lbl" for="v-id">Upload NID or Birth Certificate <span class="req">*</span></label>
@@ -296,7 +310,7 @@
     <div class="container">
       <div class="footer-top">
         <div>
-          <a href="index.html" class="brand" aria-label="AlayDugo home"><img src="icons/alaydugo-logo.jpg" alt="AlayDugo"></a>
+          <a href="index.html" class="brand"><span class="brand-logo"><img src="icons/alaydugo-logo.jpg" alt=""></span><span class="brand-name">AlayDugo</span></a>
           <p class="tag">Isang Patak, Isang Buhay.<br>Connecting generous blood donors with people who need life-saving blood.</p>
         </div>
         <div class="footer-contact">

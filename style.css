@@ -6,7 +6,7 @@
   --text: #212121;
   --pink: #FFEBEE;
   --muted: #6b6b6b;
-  --nav-h: 84px;
+  --nav-h: 72px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -31,10 +31,12 @@ a { color: inherit; text-decoration: none; }
 /* Navbar */
 header { position: sticky; top: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-bottom: 1px solid #eee; z-index: 10; }
 .nav { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); }
+.brand { display: inline-flex; align-items: center; gap: 12px; color: var(--primary); font-size: 24px; font-weight: 800; letter-spacing: -0.3px; }
 /* The logo file has white space around the circle, so crop to the circle here */
-.brand { position: relative; display: block; flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%; overflow: hidden; color: var(--primary); }
-.brand img { position: absolute; display: block; max-width: none; width: 209.84%; height: auto; left: -54.92%; top: -21.52%; }
-footer .brand { width: 88px; height: 88px; }
+.brand-logo, .know-logo { position: relative; display: block; flex-shrink: 0; border-radius: 50%; overflow: hidden; }
+.brand-logo { width: 56px; height: 56px; }
+.brand-logo img, .know-logo img { position: absolute; display: block; max-width: none; width: 209.84%; height: auto; left: -54.92%; top: -21.52%; }
+footer .brand-logo { width: 64px; height: 64px; }
 .nav ul { display: flex; align-items: center; gap: 24px; list-style: none; }
 .nav ul a { font-size: 15px; font-weight: 600; transition: color .2s; }
 .nav ul li:nth-last-child(2) { margin-right: -16px; }
@@ -66,6 +68,8 @@ footer .brand { width: 88px; height: 88px; }
 
 /* Get to know us */
 .know { padding: 60px 0; background: #FCFCFD; }
+.know .container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.know-logo { width: 340px; height: 340px; justify-self: center; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
 .know h2 { font-size: 36px; font-weight: 900; margin: 16px 0 24px; }
 .know h3 { font-size: 18px; margin-bottom: 6px; }
 .know p { color: var(--muted); max-width: 440px; margin-bottom: 22px; }
@@ -127,7 +131,7 @@ footer .brand { width: 88px; height: 88px; }
 .donor-top h3 { font-size: 18px; margin-bottom: 4px; }
 .badge-avail.off { background: #eceff1; color: #546e7a; }
 .badge-avail { display: inline-block; background: #E3F5E8; color: #1B6B35; font-size: 13px; font-weight: 600; padding: 2px 12px; border-radius: 999px; }
-.donor-loc { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+.donor-loc { color: var(--muted); font-size: 15px; margin-bottom: 8px; }
 .btn-inquiry { display: block; width: 100%; margin-top: auto; background: #fff; color: var(--primary); border: 1px solid var(--primary); border-radius: 12px; padding: 12px; font-weight: 700; }
 .btn-inquiry:hover { background: var(--pink); box-shadow: none; }
 
@@ -257,7 +261,6 @@ footer .brand { width: 88px; height: 88px; }
 .field textarea:focus { outline: none; border-color: var(--secondary); }
 
 /* Donor extras (Find Blood Donors) */
-.donor-last { color: var(--muted); font-size: 14px; margin: -8px 0 16px; }
 .upload-box { border: 1.5px dashed #e8a0a8; background: #FFF3F4; border-radius: 12px; padding: 14px; }
 .modal-box textarea::placeholder { color: #999; }
 .modal-lead { color: var(--muted); font-size: 16px; margin-bottom: 22px; }
@@ -278,8 +281,10 @@ footer .brand { width: 88px; height: 88px; }
 .toast.show { opacity: 1; transform: none; }
 
 /* Donor notes and blood requests (Find Blood Donors) */
-.donor-notes { color: var(--muted); font-size: 14px; margin: -8px 0 16px; }
-.donor-notes strong { color: var(--text); }
+.donor-last, .donor-notes { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+.donor-last strong, .donor-notes strong { color: var(--text); }
+/* whatever the last line of text is, keep a gap above the Send Inquiry button */
+.donor-card > p:last-of-type { margin-bottom: 16px; }
 .requests { margin-top: 70px; text-align: left; }
 .requests h2 { font-size: 32px; font-weight: 900; margin: 14px 0 8px; }
 .rq-sub { color: var(--muted); max-width: 560px; margin-bottom: 30px; }
@@ -311,8 +316,11 @@ footer .tag { margin-top: 10px; max-width: 360px; font-size: 13px; }
 
 /* Responsive */
 @media (max-width: 800px) {
-  :root { --nav-h: 72px; }
-  .brand { width: 56px; height: 56px; }
+  :root { --nav-h: 64px; }
+  .brand { font-size: 20px; gap: 10px; }
+  .brand-logo { width: 44px; height: 44px; }
+  .know .container { grid-template-columns: 1fr; }
+  .know-logo { width: 240px; height: 240px; }
   .container { padding: 0 20px; }
   .hero .container { grid-template-columns: 1fr; }
   #menu-toggle { display: block; }
