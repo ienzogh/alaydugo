@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In – AlayDugo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand">AlayDugo</a>
+      <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+      <ul id="links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
+        <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
+        <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="fade">
+    <section class="auth">
+      <div class="container">
+
+        <!-- Log in -->
+        <div class="auth-card view" id="view-login" hidden>
+          <h1>Welcome back</h1>
+          <p class="auth-sub">Log In to your AlayDugo account to get started.</p>
+          <form id="form-login">
+            <div class="field">
+              <label class="lbl" for="login-email">Email Address</label>
+              <input type="email" id="login-email" required>
+            </div>
+            <div class="field">
+              <label class="lbl" for="login-password">Password</label>
+              <input type="password" id="login-password" required>
+            </div>
+            <p class="forgot-link"><a href="#forgot">Forgot password?</a></p>
+            <p class="form-error" id="login-error" hidden>Incorrect email or password.</p>
+            <button type="submit" class="btn btn-auth">Log In</button>
+          </form>
+          <p class="auth-switch">New to AlayDugo? <a href="#register">Create an account</a></p>
+        </div>
+
+        <!-- Register -->
+        <div class="auth-card view" id="view-register" hidden>
+          <h1>Create your AlayDugo account</h1>
+          <p class="auth-sub">Join the community and help connect donors with patients in need.</p>
+          <form id="form-register">
+            <label class="lbl">I want to join as <span class="req">*</span></label>
+            <div class="roles">
+              <label class="role selected">
+                <input type="radio" name="role" value="donor" checked>
+                <strong>Blood Donor</strong>
+                <span>Be available for donation requests</span>
+              </label>
+              <label class="role">
+                <input type="radio" name="role" value="requester">
+                <strong>Blood Requester</strong>
+                <span>Submit a request for a patient</span>
+              </label>
+            </div>
+
+            <div class="field">
+              <label class="lbl" for="reg-name">Full Name <span class="req">*</span></label>
+              <input type="text" id="reg-name" required>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="reg-email">Email Address <span class="req">*</span></label>
+                <input type="email" id="reg-email" required>
+              </div>
+              <div class="field">
+                <label class="lbl" for="reg-phone">Contact Number <span class="req">*</span></label>
+                <input type="tel" id="reg-phone" placeholder="09XX XXX XXXX" required>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="reg-password">Password <span class="req">*</span></label>
+                <input type="password" id="reg-password" required>
+                <span class="hint">8+ characters with upper-case, lower-case and a number.</span>
+              </div>
+              <div class="field">
+                <label class="lbl" for="reg-confirm">Confirm Password <span class="req">*</span></label>
+                <input type="password" id="reg-confirm" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="lbl" for="reg-address">Address <span class="req">*</span></label>
+              <input type="text" id="reg-address" required>
+              <span class="hint">Used only for administration. It is never shown publicly.</span>
+            </div>
+
+
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="reg-dob">Date of Birth <span class="req">*</span></label>
+                <input type="date" id="reg-dob" required>
+              </div>
+              <div class="field">
+                <label class="lbl" for="reg-blood">Blood Type (if known)</label>
+                <select id="reg-blood">
+                  <option value="">Select blood type</option>
+                  <option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option>
+                  <option>O+</option><option>O-</option>
+                </select>
+                <span class="hint">Self-reported. A blood service facility confirms your type.</span>
+              </div>
+            </div>
+
+            <label class="consent">
+              <input type="checkbox" id="reg-consent">
+              <span>I consent to AlayDugo collecting and processing my personal information in accordance with the Data Privacy Act of 2012 (RA 10173). <span class="req">*</span></span>
+            </label>
+
+            <p class="form-error" id="consent-error" hidden>Please tick the consent box to create your account.</p>
+
+            <button type="submit" class="btn btn-auth">Create Account</button>
+          </form>
+          <p class="auth-switch">Already have an account? <a href="#login">Log in</a></p>
+        </div>
+
+        <!-- Forgot password -->
+        <div class="auth-card view" id="view-forgot" hidden>
+          <h1>Forgot your password?</h1>
+          <p class="auth-sub">Enter your email and we'll send you a link to reset it.</p>
+          <form id="form-forgot">
+            <div class="field">
+              <label class="lbl" for="forgot-email">Email Address</label>
+              <input type="email" id="forgot-email" required>
+            </div>
+            <button type="submit" class="btn btn-auth">Send Reset Link</button>
+          </form>
+          <p class="auth-switch"><a href="#login">Back to login</a></p>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand">AlayDugo</a>
+          <p class="tag">Isang Patak, Isang Buhay.<br>Connecting generous blood donors with people who need life-saving blood.</p>
+        </div>
+        <div class="footer-contact">
+          <h4>Get in touch</h4>
+          <p>alaydugo@gmail.com</p>
+          <p>09XX XXX XXXX</p>
+          <p>alaydugoinsta</p>
+          <p>alaydugofb</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p><strong>Important:</strong> AlayDugo is a community matching platform. It is not a hospital or a licensed blood bank. For urgent blood needs, contact your hospital or an authorized blood service facility (such as the Philippine Red Cross) immediately. Blood compatibility and donor eligibility are assessed only by qualified healthcare professionals.</p>
+        <p>© 2026 AlayDugo – Isang Patak, Isang Buhay.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

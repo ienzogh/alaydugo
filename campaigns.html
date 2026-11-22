@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation Campaigns – AlayDugo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand">AlayDugo</a>
+      <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+      <ul id="links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
+        <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
+        <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="fade">
+    <section class="about-intro">
+      <div class="container intro-row">
+        <div>
+          <h1>Blood Donation Campaigns</h1>
+          <p>Find upcoming and ongoing donation drives and register to take part.</p>
+        </div>
+        <!-- Only shown to the admin -->
+        <button type="button" class="btn btn-new" id="new-campaign-btn" hidden>+ New campaign</button>
+      </div>
+    </section>
+
+    <!-- Shown when not logged in -->
+    <section class="gate-section" id="gate">
+      <div class="container">
+        <div class="gate-card">
+          <div class="gate-icon"><img src="icons/lock_icon.png" alt="Locked"></div>
+          <h2>Log in to continue</h2>
+          <p>To protect our users, searching is available to registered, signed-in members only. User phone numbers, emails and addresses are never shown.</p>
+          <div class="gate-buttons">
+            <a href="auth.html#login" class="btn btn-solid">Log In</a>
+            <a href="auth.html#register" class="btn btn-ring">Register</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="campaigns" id="protected" hidden>
+      <div class="container">
+        <div class="filters filters-camp">
+          <div>
+            <label for="search">Search</label>
+            <input type="text" id="search" placeholder="Title, venue or organizer">
+          </div>
+          <div>
+            <label for="city">Address</label>
+            <input type="text" id="city" placeholder="e.g. Yati, Liloan, Cebu">
+          </div>
+          <div>
+            <label for="date">Date</label>
+            <input type="date" id="date">
+          </div>
+          <button type="button" class="btn btn-reset" id="reset-btn">Reset</button>
+        </div>
+
+        <div class="camp-grid" id="camp-grid"></div>
+        <p class="donor-count" id="camp-empty" hidden>No campaigns found.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- New campaign popup (admin only) -->
+  <div class="modal" id="campaign-modal">
+    <div class="modal-box camp-modal">
+      <div class="modal-head">
+        <h3>New campaign</h3>
+        <button type="button" class="modal-x" aria-label="Close">×</button>
+      </div>
+      <form id="campaign-form" novalidate>
+        <div class="field">
+          <label class="lbl" for="c-title">Title <span class="req">*</span></label>
+          <input type="text" id="c-title">
+        </div>
+        <div class="field">
+          <label class="lbl" for="c-image">Image</label>
+          <input type="file" id="c-image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+          <span class="hint">JPG, PNG, or WEBP only. Maximum file size: 5 MB.</span>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label class="lbl" for="c-date">Event date <span class="req">*</span></label>
+            <input type="date" id="c-date">
+          </div>
+          <div class="field">
+            <label class="lbl" for="c-organizer">Organizer <span class="req">*</span></label>
+            <input type="text" id="c-organizer">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label class="lbl" for="c-start">Start time</label>
+            <input type="time" id="c-start">
+          </div>
+          <div class="field">
+            <label class="lbl" for="c-end">End time</label>
+            <input type="time" id="c-end">
+          </div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="c-venue">Venue <span class="req">*</span></label>
+          <input type="text" id="c-venue">
+        </div>
+        <div class="field">
+          <label class="lbl" for="c-address">Address <span class="req">*</span></label>
+          <input type="text" id="c-address" placeholder="e.g. Yati, Liloan, Cebu">
+        </div>
+        <div class="field">
+          <label class="lbl" for="c-desc">Description <span class="req">*</span></label>
+          <textarea id="c-desc"></textarea>
+        </div>
+        <p class="form-error" id="camp-error" hidden></p>
+        <div class="modal-actions">
+          <button type="button" class="btn modal-cancel">Cancel</button>
+          <button type="submit" class="btn modal-send">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm delete popup -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-box confirm-box">
+      <div class="modal-head">
+        <h3 id="confirm-title">Please confirm</h3>
+        <button type="button" class="modal-x" aria-label="Close">×</button>
+      </div>
+      <p id="confirm-text">Delete this campaign? This cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn modal-cancel">Cancel</button>
+        <button type="button" class="btn modal-send" id="confirm-yes">Yes, delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand">AlayDugo</a>
+          <p class="tag">Isang Patak, Isang Buhay.<br>Connecting generous blood donors with people who need life-saving blood.</p>
+        </div>
+        <div class="footer-contact">
+          <h4>Get in touch</h4>
+          <p>alaydugo@gmail.com</p>
+          <p>09XX XXX XXXX</p>
+          <p>alaydugoinsta</p>
+          <p>alaydugofb</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p><strong>Important:</strong> AlayDugo is a community matching platform. It is not a hospital or a licensed blood bank. For urgent blood needs, contact your hospital or an authorized blood service facility (such as the Philippine Red Cross) immediately. Blood compatibility and donor eligibility are assessed only by qualified healthcare professionals.</p>
+        <p>© 2026 AlayDugo – Isang Patak, Isang Buhay.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/campaigns.js"></script>
+</body>
+</html>

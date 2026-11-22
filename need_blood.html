@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Blood Donors – AlayDugo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="brand">AlayDugo</a>
+      <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+      <ul id="links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
+        <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
+        <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="fade">
+    <section class="about-intro">
+      <div class="container intro-row">
+        <div>
+          <h1>Find Blood Donors</h1>
+          <p>Search registered volunteer donors by blood type and location. For privacy, contact details are never shown — send a secure inquiry instead.</p>
+        </div>
+        <!-- Only shown to a logged-in donor -->
+        <button type="button" class="btn btn-new" id="verify-btn" hidden>Verify to Become a Donor</button>
+        <button type="button" class="btn btn-new" id="avail-btn" hidden>Update Donor Availability</button>
+        <!-- Only shown to a logged-in requester -->
+        <button type="button" class="btn btn-new" id="request-btn" hidden>Request Blood</button>
+      </div>
+    </section>
+
+    <!-- Shown when not logged in -->
+    <section class="gate-section" id="gate">
+      <div class="container">
+        <div class="gate-card">
+          <div class="gate-icon"><img src="icons/lock_icon.png" alt="Locked"></div>
+          <h2>Log in to continue</h2>
+          <p>To protect our users, searching is available to registered, signed-in members only. User phone numbers, emails and addresses are never shown.</p>
+          <div class="gate-buttons">
+            <a href="auth.html#login" class="btn btn-solid">Log In</a>
+            <a href="auth.html#register" class="btn btn-ring">Register</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="campaigns" id="protected" hidden>
+      <div class="container">
+
+        <div class="notice">
+          <strong>Urgent blood need?</strong> Contact your hospital or an authorized blood service facility right away. AlayDugo is a community platform and does not replace hospitals or licensed blood banks.
+        </div>
+
+        <!-- Filters -->
+        <div class="filters filters-donor">
+          <div>
+            <label for="blood-type">Blood Type</label>
+            <select id="blood-type">
+              <option>Any</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+            </select>
+          </div>
+          <div>
+            <label for="city">Address</label>
+            <input type="text" id="city" placeholder="e.g. Yati, Liloan, Cebu">
+          </div>
+          <div>
+            <label for="availability">Availability</label>
+            <select id="availability">
+              <option>Any</option>
+              <option>Available</option>
+              <option>Unavailable</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-reset" id="search-btn">Search</button>
+        </div>
+
+        <!-- Sample donors (placeholder data, no database yet) -->
+        <p class="donor-count" id="donor-count">3 donors found</p>
+        <div class="donor-grid">
+          <div class="donor-card" data-type="O+" data-loc="Cebu City, Cebu" data-avail="Available">
+            <div class="donor-top">
+              <div class="badge-type">O+</div>
+              <div>
+                <h3>Juan D. C.</h3>
+                <span class="badge-avail">Available</span>
+              </div>
+            </div>
+            <p class="donor-loc">Cebu City, Cebu</p>
+            <button type="button" class="btn btn-inquiry" data-name="Juan D. C.">Send Inquiry</button>
+          </div>
+          <div class="donor-card" data-type="B+" data-loc="Mandaue City, Cebu" data-avail="Available">
+            <div class="donor-top">
+              <div class="badge-type">B+</div>
+              <div>
+                <h3>Maria S. L.</h3>
+                <span class="badge-avail">Available</span>
+              </div>
+            </div>
+            <p class="donor-loc">Mandaue City, Cebu</p>
+            <p class="donor-last">Last donated: Sep 15, 2026</p>
+            <button type="button" class="btn btn-inquiry" data-name="Maria S. L.">Send Inquiry</button>
+          </div>
+          <div class="donor-card" data-type="O-" data-loc="Consolacion, Cebu" data-avail="Unavailable">
+            <div class="donor-top">
+              <div class="badge-type">O-</div>
+              <div>
+                <h3>Carlo R. M.</h3>
+                <span class="badge-avail off">Unavailable</span>
+              </div>
+            </div>
+            <p class="donor-loc">Consolacion, Cebu</p>
+            <p class="donor-notes"><strong>Medical notes:</strong> Recently donated. Healthy, no current medications.</p>
+            <button type="button" class="btn btn-inquiry" data-name="Carlo R. M.">Send Inquiry</button>
+          </div>
+        </div>
+        <p class="donor-count" id="donor-empty" hidden>No donors match your search.</p>
+
+        <!-- Become a Donor: blood requests -->
+        <div class="requests" id="requests">
+          <h2>Become a Donor</h2>
+          <p class="rq-sub">Your blood can be someone's second chance at life. Choose a request below and become their hero today.</p>
+          <div class="rq-grid" id="rq-grid"></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- Send inquiry popup (does not send anything yet) -->
+  <div class="modal" id="inquiry-modal">
+    <div class="modal-box">
+      <h3 id="modal-title">Send inquiry</h3>
+      <div class="modal-info">Your message will be sent directly to the donor's email. The donor decides whether to respond. Do not share sensitive medical details here.</div>
+      <label for="inquiry-message">Message</label>
+      <textarea id="inquiry-message" placeholder="Hello! A patient at (hospital) needs (blood type). Would you be able to help?"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="btn modal-cancel">Cancel</button>
+        <button type="button" class="btn modal-send">Send Inquiry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verify to become a donor popup (nothing is uploaded yet) -->
+  <div class="modal" id="verify-modal">
+    <div class="modal-box camp-modal">
+      <div class="modal-head">
+        <h3>Verify to Become a Donor</h3>
+        <button type="button" class="modal-x" aria-label="Close">×</button>
+      </div>
+      <form id="verify-form" novalidate>
+        <div class="field">
+          <label class="lbl" for="v-id">Upload NID or Birth Certificate <span class="req">*</span></label>
+          <div class="upload-box">
+            <input type="file" id="v-id" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+          </div>
+          <span class="hint">JPG, PNG, or WEBP only. Maximum file size: 5 MB.</span>
+        </div>
+        <label class="consent">
+          <input type="checkbox" id="v-donated">
+          <span>I've donated blood before.</span>
+        </label>
+        <div class="field">
+          <label class="lbl" for="v-notes">Medical Notes (Optional)</label>
+          <textarea id="v-notes" placeholder="Add relevant medical information here..."></textarea>
+        </div>
+        <p class="form-error" id="v-error" hidden></p>
+        <button type="submit" class="btn btn-auth">Verify</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Donor availability popup -->
+  <div class="modal" id="avail-modal">
+    <div class="modal-box camp-modal">
+      <div class="modal-head">
+        <h3>Update Donor Availability</h3>
+        <button type="button" class="modal-x" aria-label="Close">×</button>
+      </div>
+      <p class="modal-lead">When available, you can receive donation inquiries. Turn it off any time (for example, when you are unwell or recently donated).</p>
+      <label class="switch-row">
+        <input type="checkbox" id="av-available">
+        <span class="switch"></span>
+        <strong>I am currently available</strong>
+      </label>
+      <label class="switch-row">
+        <input type="checkbox" id="av-last">
+        <span class="switch"></span>
+        <span>Show my last donation date</span>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn modal-cancel">Cancel</button>
+        <button type="button" class="btn modal-send" id="av-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply to donate popup (does not send anything yet) -->
+  <div class="modal" id="apply-modal">
+    <div class="modal-box">
+      <h3 id="apply-title">Apply to donate</h3>
+      <div class="modal-info">Your message will be sent directly to the requester's email. Let them know when you are available to donate. Do not share sensitive medical details here.</div>
+      <label for="apply-message">Message</label>
+      <textarea id="apply-message" placeholder="Hello! I would like to donate blood for your request. I am available on (date)."></textarea>
+      <div class="modal-actions">
+        <button type="button" class="btn modal-cancel">Cancel</button>
+        <button type="button" class="btn modal-send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blood request popup (posts below the donors) -->
+  <div class="modal" id="request-modal">
+    <div class="modal-box rq-modal">
+      <div class="modal-head">
+        <h3>Blood Request Form</h3>
+        <button type="button" class="modal-x" aria-label="Close">×</button>
+      </div>
+      <p class="modal-lead">Please provide the patient's information and blood requirements.</p>
+      <form id="request-form" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label class="lbl" for="r-name">Patient / Recipient Name <span class="req">*</span></label>
+            <input type="text" id="r-name" placeholder="Enter recipient's name">
+          </div>
+          <div class="field">
+            <label class="lbl" for="r-type">Blood Type Needed <span class="req">*</span></label>
+            <select id="r-type">
+              <option value="">Select blood type</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label class="lbl" for="r-units">Number of Units Needed <span class="req">*</span></label>
+            <input type="number" id="r-units" min="1" placeholder="Enter number of units">
+          </div>
+          <div class="field">
+            <label class="lbl" for="r-date">Date Needed <span class="req">*</span></label>
+            <input type="date" id="r-date">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label class="lbl" for="r-person">Contact Person <span class="req">*</span></label>
+            <input type="text" id="r-person" placeholder="Name of contact person">
+          </div>
+          <div class="field">
+            <label class="lbl" for="r-phone">Contact Number <span class="req">*</span></label>
+            <input type="tel" id="r-phone" placeholder="09XX XXX XXXX">
+          </div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="r-address">Address <span class="req">*</span></label>
+          <input type="text" id="r-address" placeholder="e.g. Yati, Liloan, Cebu">
+        </div>
+        <div class="field">
+          <label class="lbl" for="r-hospital">Hospital / Location <span class="req">*</span></label>
+          <input type="text" id="r-hospital" placeholder="e.g. Cebu City Medical Center">
+        </div>
+        <div class="field">
+          <label class="lbl" for="r-id">Upload NID or Birth Certificate <span class="req">*</span></label>
+          <div class="upload-box">
+            <input type="file" id="r-id" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+          </div>
+          <span class="hint">JPG, PNG, or WEBP only. Maximum file size: 5 MB.</span>
+        </div>
+        <div class="field">
+          <label class="lbl" for="r-info">Additional Information</label>
+          <textarea id="r-info" placeholder="Additional information about the blood request..."></textarea>
+        </div>
+        <p class="form-error" id="r-error" hidden></p>
+        <button type="submit" class="btn btn-auth">Submit Blood Request</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand">AlayDugo</a>
+          <p class="tag">Isang Patak, Isang Buhay.<br>Connecting generous blood donors with people who need life-saving blood.</p>
+        </div>
+        <div class="footer-contact">
+          <h4>Get in touch</h4>
+          <p>alaydugo@gmail.com</p>
+          <p>09XX XXX XXXX</p>
+          <p>alaydugoinsta</p>
+          <p>alaydugofb</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p><strong>Important:</strong> AlayDugo is a community matching platform. It is not a hospital or a licensed blood bank. For urgent blood needs, contact your hospital or an authorized blood service facility (such as the Philippine Red Cross) immediately. Blood compatibility and donor eligibility are assessed only by qualified healthcare professionals.</p>
+        <p>© 2026 AlayDugo – Isang Patak, Isang Buhay.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/need_blood.js"></script>
+</body>
+</html>
