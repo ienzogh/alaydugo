@@ -6,6 +6,7 @@
   --text: #212121;
   --pink: #FFEBEE;
   --muted: #6b6b6b;
+  --nav-h: 84px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -29,8 +30,11 @@ a { color: inherit; text-decoration: none; }
 
 /* Navbar */
 header { position: sticky; top: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-bottom: 1px solid #eee; z-index: 10; }
-.nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-.brand { font-size: 22px; font-weight: 800; color: var(--primary); }
+.nav { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); }
+/* The logo file has white space around the circle, so crop to the circle here */
+.brand { position: relative; display: block; flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%; overflow: hidden; color: var(--primary); }
+.brand img { position: absolute; display: block; max-width: none; width: 209.84%; height: auto; left: -54.92%; top: -21.52%; }
+footer .brand { width: 88px; height: 88px; }
 .nav ul { display: flex; align-items: center; gap: 24px; list-style: none; }
 .nav ul a { font-size: 15px; font-weight: 600; transition: color .2s; }
 .nav ul li:nth-last-child(2) { margin-right: -16px; }
@@ -102,7 +106,7 @@ header { position: sticky; top: 0; background: rgba(255,255,255,.95); backdrop-f
 .contact-card p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
 .contact-card strong { color: var(--primary); font-size: 14px; }
 
-.contact-merged { background: none; padding: 30px 0 70px; scroll-margin-top: 70px; }
+.contact-merged { background: none; padding: 30px 0 70px; scroll-margin-top: calc(var(--nav-h) + 16px); }
 
 /* Campaigns page (filters only for now) */
 .campaigns { padding: 0 0 70px; }
@@ -307,10 +311,12 @@ footer .tag { margin-top: 10px; max-width: 360px; font-size: 13px; }
 
 /* Responsive */
 @media (max-width: 800px) {
+  :root { --nav-h: 72px; }
+  .brand { width: 56px; height: 56px; }
   .container { padding: 0 20px; }
   .hero .container { grid-template-columns: 1fr; }
   #menu-toggle { display: block; }
-  .nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0; background: #fff; flex-direction: column; align-items: flex-start; padding: 16px 20px 20px; border-bottom: 1px solid #eee; }
+  .nav ul { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0; background: #fff; flex-direction: column; align-items: flex-start; padding: 16px 20px 20px; border-bottom: 1px solid #eee; }
   .nav ul.open { display: flex; }
   .hero { padding: 40px 0; }
   .hero h1 { font-size: 40px; }
