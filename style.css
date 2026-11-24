@@ -122,6 +122,33 @@ footer .brand-logo { width: 64px; height: 64px; }
 
 /* Need Blood page (static for now) */
 .filters-donor { grid-template-columns: 1fr 2fr 1fr auto; }
+.filters-find { grid-template-columns: 1fr 1fr auto; }
+.find-error { margin: 14px 0 0; font-size: 14px; }
+.res-h { font-size: 24px; font-weight: 800; margin: 36px 0 16px; }
+#res-top { margin-bottom: 8px; }
+.hosp-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.hosp-card { display: flex; flex-direction: column; background: #fff; border: 1px solid #eee; border-radius: 22px; padding: 26px; box-shadow: 0 6px 24px rgba(0,0,0,.05); }
+.hosp-card.top { border: 2px solid var(--secondary); max-width: 640px; box-shadow: 0 10px 30px rgba(183,28,28,.12); }
+.hosp-flag { align-self: flex-start; background: var(--primary); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .5px; padding: 4px 14px; border-radius: 999px; margin-bottom: 14px; }
+.hosp-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+.hosp-rank { background: var(--pink); color: var(--primary); font-weight: 800; border-radius: 12px; padding: 10px 14px; min-width: 56px; text-align: center; }
+.hosp-units { display: flex; align-items: baseline; gap: 10px; background: var(--pink); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; }
+.hosp-units-num { font-size: 34px; font-weight: 800; color: var(--primary); line-height: 1; }
+.hosp-units-text { font-size: 15px; font-weight: 600; }
+.hosp-need { font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+.hosp-need.urgent { color: #b00020; }
+.hosp-dates { background: #f6f8fa; border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; font-size: 14px; }
+.hosp-dates ul { list-style: none; margin-top: 8px; }
+.hosp-dates li { margin-bottom: 4px; color: var(--muted); }
+.hosp-head h3 { font-size: 18px; margin-bottom: 2px; }
+.hosp-area { color: var(--muted); font-size: 14px; }
+.hosp-row { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+.hosp-row strong { color: var(--text); }
+.hosp-btn { margin-top: auto; }
+.hosp-card .hosp-row:last-of-type { margin-bottom: 16px; }
+.badge-avail.low { background: #FFF3D6; color: #8a6100; }
+.res-none { background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 20px 24px; color: var(--muted); }
+.sample-note { margin-top: 28px; font-size: 13px; color: var(--muted); }
 .donor-count { color: var(--muted); font-size: 14px; margin: 28px 0 14px; }
 .donor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .donor-card { display: flex; flex-direction: column; background: #fff; border: 1px solid #eee; border-radius: 22px; padding: 26px; box-shadow: 0 6px 24px rgba(0,0,0,.05); transition: transform .2s, box-shadow .2s; }
@@ -239,8 +266,12 @@ footer .brand-logo { width: 64px; height: 64px; }
 .camp-date span { display: block; }
 .camp-date .m { font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--primary); }
 .camp-date .d { font-size: 18px; font-weight: 800; }
-.camp-delete { position: absolute; top: 12px; right: 12px; background: #fff; color: var(--primary); border: 0; border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.camp-delete { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; background: #fff; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.camp-delete img { width: 16px; height: 16px; object-fit: contain; display: block; }
 .camp-delete:hover { background: var(--pink); }
+.camp-edit { position: absolute; top: 12px; right: 52px; width: 32px; height: 32px; background: #fff; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.camp-edit:hover { background: var(--pink); }
+.camp-edit img { width: 16px; height: 16px; object-fit: contain; display: block; }
 .camp-body { padding: 22px; }
 .camp-body h3 { font-size: 20px; margin-bottom: 12px; }
 .camp-meta { list-style: none; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
@@ -332,6 +363,7 @@ footer .tag { margin-top: 10px; max-width: 360px; font-size: 13px; }
   .cta h2 { font-size: 28px; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid, .hq, .filters { grid-template-columns: 1fr; }
+  .hosp-list { grid-template-columns: 1fr; }
   .donor-grid, .camp-grid, .rq-grid { grid-template-columns: 1fr; }
   .row2, .roles { grid-template-columns: 1fr; }
   .auth-card { padding: 28px 20px; }
@@ -340,3 +372,4 @@ footer .tag { margin-top: 10px; max-width: 360px; font-size: 13px; }
   .team-grid { grid-template-columns: repeat(3, 1fr); }
   .donor-grid, .camp-grid { grid-template-columns: repeat(2, 1fr); }
 }
+.addr-hint { margin: -6px 0 16px; }

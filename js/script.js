@@ -31,41 +31,6 @@ if (modal) {
   });
 }
 
-// Find Blood Donors search (filters the sample cards on the page)
-var searchBtn = document.getElementById("search-btn");
-if (searchBtn) {
-  var typeSelect = document.getElementById("blood-type");
-  var cityInput = document.getElementById("city");
-  var availSelect = document.getElementById("availability");
-  var cards = document.querySelectorAll(".donor-card");
-  var countText = document.getElementById("donor-count");
-  var emptyText = document.getElementById("donor-empty");
-
-  function runSearch() {
-    var type = typeSelect.value;
-    var words = cityInput.value.toLowerCase().split(/[\s,]+/).filter(Boolean);
-    var shown = 0;
-
-    cards.forEach(function (card) {
-      var loc = card.dataset.loc.toLowerCase();
-      var okType = type === "Any" || card.dataset.type === type;
-      var okLoc = words.every(function (w) { return loc.indexOf(w) !== -1; });
-      var okAvail = !availSelect || availSelect.value === "Any" || card.dataset.avail === availSelect.value;
-      var show = okType && okLoc && okAvail;
-      card.style.display = show ? "" : "none";
-      if (show) shown++;
-    });
-
-    countText.textContent = shown + (shown === 1 ? " donor found" : " donors found");
-    emptyText.hidden = shown !== 0;
-  }
-
-  searchBtn.addEventListener("click", runSearch);
-  cityInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") runSearch();
-  });
-}
-
 // Logged-in state (kept in this browser only until there is a database)
 function getUser() {
   try {
@@ -130,11 +95,6 @@ function openLogoutConfirm() {
 var registerLink = document.querySelector(".nav .btn-red");
 if (registerLink && currentUser) {
   registerLink.parentNode.hidden = true;
-}
-
-// Home page: no "Become a Donor" buttons once logged in
-if (currentUser) {
-  document.querySelectorAll(".join-btn").forEach(function (b) { b.hidden = true; });
 }
 
 // Pages that need a login: show the content instead of the "Log in to continue" card

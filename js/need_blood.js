@@ -1,10 +1,34 @@
-// Find Blood Donors page:
-//  - donors: verify to become a donor, update availability
-//  - requesters: blood request form, posted under "Become a Donor"
-// Everything is saved in this browser only until there is a database. Nothing is uploaded or sent yet.
+// Need Blood? page: find the nearest hospitals for blood requesters and blood donors.
+// Hospital data below is hardcoded SAMPLE data until hospitals are connected (no database yet).
 (function () {
   var me = getUser();
-  var role = me ? me.role : "";
+  if (!me || !document.getElementById("find-btn")) return;
+
+  var TYPES = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+  // stock = units on hand, in the order of TYPES. need: 0 = sufficient, 1 = needed, 2 = urgent.
+  // days = how many days from today the hospital holds a donation day.
+  var HOSPITALS = [
+    { name: "Cebu Doctors' University Hospital", kind: "Private hospital", street: "Osmeña Boulevard", city: "Cebu City, Cebu",
+      phone: "(032) 555-0101", email: "bloodbank@cdu.example.com", hours: "Mon–Sat, 8:00 AM – 4:00 PM", lat: 10.3170, lng: 123.8910,
+      stock: [14, 3, 9, 0, 6, 1, 22, 4], need: [0, 2, 0, 2, 1, 2, 0, 1], days: [2, 6, 9], slots: "8:00 AM – 3:00 PM" },
+    { name: "Chong Hua Hospital", kind: "Private hospital", street: "Don Mariano Cui St., Fuente Osmeña", city: "Cebu City, Cebu",
+      phone: "(032) 555-0102", email: "bloodbank@chonghua.example.com", hours: "Mon–Sun, 8:00 AM – 5:00 PM", lat: 10.3080, lng: 123.8920,
+      stock: [8, 0, 12, 2, 4, 0, 15, 0], need: [1, 2, 0, 1, 1, 2, 0, 2], days: [1, 3, 8], slots: "8:00 AM – 4:00 PM" },
+    { name: "Vicente Sotto Memorial Medical Center", kind: "Government hospital", street: "B. Rodriguez St.", city: "Cebu City, Cebu",
+      phone: "(032) 555-0103", email: "bloodbank@vsmmc.example.com", hours: "Mon–Fri, 8:00 AM – 3:00 PM", lat: 10.3010, lng: 123.8930,
+      stock: [20, 6, 18, 5, 8, 2, 30, 7], need: [0, 1, 0, 0, 0, 1, 0, 1], days: [4, 7, 11], slots: "8:00 AM – 2:00 PM" },
+    { name: "Perpetual Succour Hospital", kind: "Private hospital", street: "Gorordo Avenue", city: "Cebu City, Cebu",
+      phone: "(032) 555-0104", email: "bloodbank@pshospital.example.com", hours: "Mon–Sat, 9:00 AM – 4:00 PM", lat: 10.3100, lng: 123.8900,
+      stock: [5, 0, 7, 0, 2, 0, 9, 1], need: [1, 2, 1, 2, 2, 2, 1, 2], days: [2, 5, 10], slots: "9:00 AM – 3:00 PM" },
+    { name: "Cebu Velez General Hospital", kind: "Private hospital", street: "F. Ramos St.", city: "Cebu City, Cebu",
+      phone: "(032) 555-0105", email: "bloodbank@velez.example.com", hours: "Mon–Sat, 8:00 AM – 4:00 PM", lat: 10.3140, lng: 123.8940,
+      stock: [11, 2, 4, 1, 3, 0, 13, 2], need: [0, 1, 1, 1, 1, 2, 0, 1], days: [3, 6, 13], slots: "8:00 AM – 3:00 PM" },
+    { name: "Lapu-Lapu City Hospital", kind: "Government hospital", street: "Gun-ob", city: "Lapu-Lapu City, Cebu",
+      phone: "(032) 555-0106", email: "bloodbank@llch.example.com", hours: "Mon–Fri, 8:00 AM – 4:00 PM", lat: 10.3100, lng: 123.9640,
+      stock: [9, 1, 10, 3, 5, 1, 17, 3], need: [0, 2, 0, 1, 0, 2, 0, 1], days: [2, 4, 12], slots: "8:00 AM – 3:00 PM" }
+  ];
+  var DEFAULT_SPOT = { lat: 10.3157, lng: 123.8854, label: "Cebu City" };
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -13,243 +37,191 @@
     return n;
   }
 
-  function wireModal(m) {
-    m.addEventListener("click", function (e) {
-      if (e.target === m) m.classList.remove("open");
-    });
-    m.querySelectorAll(".modal-x, .modal-cancel").forEach(function (b) {
-      b.addEventListener("click", function () { m.classList.remove("open"); });
-    });
+  var typeSel = document.getElementById("f-type");
+  var roleSel = document.getElementById("f-role");
+  var findBtn = document.getElementById("find-btn");
+  var errBox = document.getElementById("find-error");
+  var results = document.getElementById("results");
+  var note = document.getElementById("res-note");
+  var topBox = document.getElementById("res-top");
+  var othersTitle = document.getElementById("res-others-title");
+  var others = document.getElementById("res-others");
+
+  // distance in km between two points
+  function km(a, b) {
+    var R = 6371, rad = Math.PI / 180;
+    var dLat = (b.lat - a.lat) * rad, dLng = (b.lng - a.lng) * rad;
+    var x = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(x));
   }
 
-  var modals = ["verify-modal", "avail-modal", "request-modal", "apply-modal"].map(function (id) {
-    return document.getElementById(id);
-  });
-  modals.forEach(wireModal);
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-      modals.forEach(function (m) { m.classList.remove("open"); });
-    }
-  });
+  // Ask the browser for the person's location; use Cebu City if it is not allowed
+  function getSpot(done) {
+    if (!navigator.geolocation) { done(DEFAULT_SPOT, false); return; }
+    navigator.geolocation.getCurrentPosition(
+      function (p) { done({ lat: p.coords.latitude, lng: p.coords.longitude }, true); },
+      function () { done(DEFAULT_SPOT, false); },
+      { timeout: 8000 }
+    );
+  }
 
-  // ================= Blood requests (Become a Donor) =================
-  var SAMPLE_REQUESTS = [
-    {
-      name: "Maria Santos", type: "O+", units: 2, date: "2026-11-24",
-      hospital: "Cebu City Medical Center", address: "Brgy. Lahug, Cebu City",
-      person: "Elena Santos", phone: "0900 000 0001", info: "Needed for scheduled surgery."
-    },
-    {
-      name: "Juan Dela Cruz", type: "A+", units: 3, date: "2026-11-26",
-      hospital: "Mandaue City Hospital", address: "Brgy. Mabolo, Cebu City",
-      person: "Carlo Dela Cruz", phone: "0900 000 0002", info: ""
-    }
-  ];
+  function dateFor(days) {
+    var d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+  function fmtDate(d) {
+    return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  }
 
-  var REQ_KEY = "alaydugo_requests";
-  var posted = [];
-  try { posted = JSON.parse(localStorage.getItem(REQ_KEY)) || []; } catch (e) {}
-
-  var rqGrid = document.getElementById("rq-grid");
-
-  function line(label, value) {
-    var p = el("p");
-    p.appendChild(el("strong", "", label + ": "));
+  function row(label, value) {
+    var p = el("p", "hosp-row");
+    p.appendChild(el("strong", "", label + " "));
     p.appendChild(document.createTextNode(value));
     return p;
   }
 
-  function renderRequests() {
-    rqGrid.innerHTML = "";
-    posted.concat(SAMPLE_REQUESTS).forEach(function (r) {
-      var card = el("div", "rq-card");
+  function card(h, rank, idx, type, role) {
+    var isTop = rank === 1;
+    var c = el("div", "hosp-card" + (isTop ? " top" : ""));
+    if (isTop) c.appendChild(el("span", "hosp-flag", "Top choice near you"));
 
-      var top = el("div", "rq-top");
-      top.appendChild(el("div", "badge-type", r.type));
-      top.appendChild(el("span", "rq-units", r.units + " unit(s) needed"));
-      card.appendChild(top);
+    var head = el("div", "hosp-head");
+    head.appendChild(el("div", "hosp-rank", "#" + rank));
+    var titles = el("div");
+    titles.appendChild(el("h3", "", h.name));
+    titles.appendChild(el("p", "hosp-area", h.kind + " · " + h.dist.toFixed(1) + " km away"));
+    head.appendChild(titles);
+    c.appendChild(head);
 
-      card.appendChild(el("h3", "", r.name));
+    if (role === "requester") {
+      var units = h.stock[idx];
+      var box = el("div", "hosp-units");
+      box.appendChild(el("span", "hosp-units-num", String(units)));
+      box.appendChild(el("span", "hosp-units-text", (units === 1 ? "unit" : "units") + " of " + type + " available" + (units < 5 ? " (low stock)" : "")));
+      c.appendChild(box);
+    } else {
+      var need = h.need[idx];
+      c.appendChild(el("p", "hosp-need" + (need === 2 ? " urgent" : ""), need === 2 ? type + " donors urgently needed" : type + " donors needed"));
+      var dates = el("div", "hosp-dates");
+      dates.appendChild(el("strong", "", "Available dates for donating"));
+      var ul = el("ul");
+      h.days.forEach(function (n) {
+        ul.appendChild(el("li", "", fmtDate(dateFor(n)) + " · " + h.slots));
+      });
+      dates.appendChild(ul);
+      c.appendChild(dates);
+    }
 
-      var p = r.date.split("-");
-      var when = new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-      card.appendChild(line("Date needed", when));
-      card.appendChild(line("Hospital / Location", r.hospital));
-      card.appendChild(line("Address", r.address));
-      card.appendChild(line("Contact Person", r.person));
-      card.appendChild(line("Contact Number", r.phone));
+    c.appendChild(row("Address:", h.street + ", " + h.city));
+    c.appendChild(row("Contact number:", h.phone));
+    c.appendChild(row("Email:", h.email));
+    c.appendChild(row(role === "requester" ? "Blood bank hours:" : "Donation hours:", h.hours));
 
-      if (r.info) {
-        var info = el("p", "rq-info");
-        info.appendChild(el("strong", "", "Additional Info: "));
-        info.appendChild(document.createTextNode(r.info));
-        card.appendChild(info);
-      } else {
-        card.appendChild(el("div", "rq-spacer"));
-      }
+    if (role === "donor") {
+      var b = el("button", "btn btn-register hosp-btn", "Email an appointment");
+      b.type = "button";
+      b.addEventListener("click", function () { openAppt(h, type); });
+      c.appendChild(b);
+    }
+    return c;
+  }
 
-      // Requesters cannot apply to donate. Sending the message does nothing yet.
-      if (role !== "requester") {
-        var apply = el("button", "btn btn-apply", "Apply to Donate");
-        apply.type = "button";
-        apply.addEventListener("click", function () {
-          document.getElementById("apply-title").textContent = "Apply to donate to " + r.name;
-          document.getElementById("apply-message").value = "";
-          document.getElementById("apply-modal").classList.add("open");
-        });
-        card.appendChild(apply);
-      }
+  function showResults(spot, located) {
+    var type = typeSel.value, role = roleSel.value;
+    var idx = TYPES.indexOf(type);
 
-      rqGrid.appendChild(card);
+    var list = HOSPITALS.map(function (h) {
+      var copy = {}; for (var k in h) copy[k] = h[k];
+      copy.dist = km(spot, h);
+      return copy;
+    }).filter(function (h) {
+      // requesters only see hospitals that have the chosen blood type; donors only see hospitals that need it
+      return role === "requester" ? h.stock[idx] > 0 : h.need[idx] > 0;
+    }).sort(function (a, b) { return a.dist - b.dist; });
+
+    topBox.innerHTML = "";
+    others.innerHTML = "";
+    note.textContent = (located ? "Using your current location. " : "We could not get your location, so results are near " + DEFAULT_SPOT.label + ". ") +
+      "Hospitals are ranked from nearest to farthest.";
+
+    if (!list.length) {
+      topBox.appendChild(el("p", "res-none", role === "requester"
+        ? "None of the sample hospitals have " + type + " in stock right now."
+        : "None of the sample hospitals need " + type + " donors right now."));
+      othersTitle.hidden = true;
+    } else {
+      topBox.appendChild(card(list[0], 1, idx, type, role));
+      list.slice(1).forEach(function (h, i) {
+        others.appendChild(card(h, i + 2, idx, type, role));
+      });
+      othersTitle.hidden = list.length < 2;
+    }
+    results.hidden = false;
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  findBtn.addEventListener("click", function () {
+    if (!typeSel.value || !roleSel.value) {
+      errBox.textContent = "Please choose a blood type and whether you are a blood donor or a blood requester.";
+      errBox.hidden = false;
+      return;
+    }
+    errBox.hidden = true;
+    findBtn.disabled = true;
+    findBtn.textContent = "Searching…";
+    getSpot(function (spot, located) {
+      findBtn.disabled = false;
+      findBtn.textContent = "Search";
+      showResults(spot, located);
     });
-  }
-  renderRequests();
-
-  // ---- requester: Request Blood ----
-  var requestBtn = document.getElementById("request-btn");
-  var requestModal = document.getElementById("request-modal");
-  var requestForm = document.getElementById("request-form");
-  var requestError = document.getElementById("r-error");
-
-  if (role === "requester") {
-    requestBtn.hidden = false;
-  }
-
-  function todayISO() {
-    var n = new Date();
-    var pad = function (x) { return (x < 10 ? "0" : "") + x; };
-    return n.getFullYear() + "-" + pad(n.getMonth() + 1) + "-" + pad(n.getDate());
-  }
-
-  requestBtn.addEventListener("click", function () {
-    requestForm.reset();
-    requestError.hidden = true;
-    document.getElementById("r-date").min = todayISO();
-    requestModal.classList.add("open");
-    document.getElementById("r-name").focus();
   });
 
-  requestForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var v = function (id) { return document.getElementById(id).value.trim(); };
+  // ---- appointment popup (opens the donor's email app with the request ready to send) ----
+  var modal = document.getElementById("appt-modal");
+  var form = document.getElementById("appt-form");
+  var aErr = document.getElementById("a-error");
+  var dateSel = document.getElementById("a-date");
+  var current = null;
 
-    var data = {
-      name: v("r-name"), type: v("r-type"), units: v("r-units"), date: v("r-date"),
-      person: v("r-person"), phone: v("r-phone"), address: v("r-address"),
-      hospital: v("r-hospital"), info: v("r-info")
-    };
-
-    var missing = ["name", "type", "units", "date", "person", "phone", "address", "hospital"].some(function (k) {
-      return data[k] === "";
+  function openAppt(h, type) {
+    current = { h: h, type: type };
+    form.reset();
+    aErr.hidden = true;
+    document.getElementById("a-name").value = (me && me.name && me.name !== "User") ? me.name : "";
+    dateSel.innerHTML = "";
+    h.days.forEach(function (n) {
+      var o = document.createElement("option");
+      o.textContent = fmtDate(dateFor(n)) + " · " + h.slots;
+      dateSel.appendChild(o);
     });
-    if (missing) {
-      requestError.textContent = "Please fill in all required fields.";
-      requestError.hidden = false;
-      return;
-    }
-    var idFile = document.getElementById("r-id").files[0];
-    if (!idFile) {
-      requestError.textContent = "Please upload your NID or Birth Certificate.";
-      requestError.hidden = false;
-      return;
-    }
-    var idOk = ["image/jpeg", "image/png", "image/webp"].indexOf(idFile.type) !== -1;
-    if (!idOk || idFile.size > 5 * 1024 * 1024) {
-      requestError.textContent = "File must be JPG, PNG, or WEBP and no larger than 5 MB.";
-      requestError.hidden = false;
-      return;
-    }
-    if (!(parseInt(data.units, 10) >= 1)) {
-      requestError.textContent = "Number of units must be at least 1.";
-      requestError.hidden = false;
-      return;
-    }
-    if (data.date < todayISO()) {
-      requestError.textContent = "Date needed cannot be in the past.";
-      requestError.hidden = false;
-      return;
-    }
-
-    data.units = parseInt(data.units, 10);
-    posted.unshift(data);
-    try { localStorage.setItem(REQ_KEY, JSON.stringify(posted)); } catch (err) {}
-
-    requestModal.classList.remove("open");
-    renderRequests();
-    showToast("Blood request posted");
-    document.getElementById("requests").scrollIntoView({ behavior: "smooth" });
-  });
-
-  // ================= Donor: verify and availability =================
-  if (role !== "donor") return;
-
-  var verifyBtn = document.getElementById("verify-btn");
-  var availBtn = document.getElementById("avail-btn");
-  var verifyModal = document.getElementById("verify-modal");
-  var availModal = document.getElementById("avail-modal");
-  var verifyForm = document.getElementById("verify-form");
-  var verifyError = document.getElementById("v-error");
-  var availOn = document.getElementById("av-available");
-  var showLast = document.getElementById("av-last");
-
-  var key = "alaydugo_donor_" + (me.email || "donor");
-  var state = {};
-  try { state = JSON.parse(localStorage.getItem(key)) || {}; } catch (e) {}
-
-  function save() {
-    try { localStorage.setItem(key, JSON.stringify(state)); } catch (e) {}
+    document.getElementById("appt-title").textContent = "Appointment at " + h.name;
+    modal.classList.add("open");
   }
+  function closeAppt() { modal.classList.remove("open"); }
 
-  // Once verified, "Update Donor Availability" replaces "Verify to Become a Donor"
-  function refresh() {
-    verifyBtn.hidden = !!state.verified;
-    availBtn.hidden = !state.verified;
-  }
+  modal.querySelector(".modal-x").addEventListener("click", closeAppt);
+  modal.addEventListener("click", function (e) { if (e.target === modal) closeAppt(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAppt(); });
 
-  verifyBtn.addEventListener("click", function () {
-    verifyForm.reset();
-    verifyError.hidden = true;
-    verifyModal.classList.add("open");
-  });
-
-  verifyForm.addEventListener("submit", function (e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
-
-    var file = document.getElementById("v-id").files[0];
-    if (!file) {
-      verifyError.textContent = "Please upload your NID or Birth Certificate.";
-      verifyError.hidden = false;
+    var name = document.getElementById("a-name").value.trim();
+    var phone = document.getElementById("a-phone").value.trim();
+    if (!name || !phone) {
+      aErr.textContent = "Please fill in all required fields.";
+      aErr.hidden = false;
       return;
     }
-    var okType = ["image/jpeg", "image/png", "image/webp"].indexOf(file.type) !== -1;
-    if (!okType || file.size > 5 * 1024 * 1024) {
-      verifyError.textContent = "File must be JPG, PNG, or WEBP and no larger than 5 MB.";
-      verifyError.hidden = false;
-      return;
-    }
-
-    state.verified = true;
-    state.donatedBefore = document.getElementById("v-donated").checked;
-    if (state.available === undefined) state.available = true;
-    save();
-    verifyModal.classList.remove("open");
-    refresh();
-    showToast("Verification submitted");
+    var when = dateSel.value;
+    var subject = "Blood donation appointment request (" + current.type + ")";
+    var body = "Good day,\n\nI would like to book a blood donation appointment at " + current.h.name + ".\n\n" +
+      "Name: " + name + "\nContact number: " + phone + "\nBlood type: " + current.type +
+      "\nPreferred schedule: " + when + "\n\nSent through AlayDugo. Thank you.";
+    closeAppt();
+    window.location.href = "mailto:" + current.h.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    showToast("Your email app opened. Press send to complete the request.");
   });
-
-  availBtn.addEventListener("click", function () {
-    availOn.checked = state.available !== false;
-    showLast.checked = !!state.showLast;
-    availModal.classList.add("open");
-  });
-
-  document.getElementById("av-save").addEventListener("click", function () {
-    state.available = availOn.checked;
-    state.showLast = showLast.checked;
-    save();
-    availModal.classList.remove("open");
-    showToast("Availability updated");
-  });
-
-  refresh();
 })();

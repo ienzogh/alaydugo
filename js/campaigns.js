@@ -164,8 +164,23 @@
       img.appendChild(badge);
 
       if (isAdmin) {
-        var del = el("button", "camp-delete", "Delete");
+        var edit = el("button", "camp-edit");
+        edit.type = "button";
+        edit.setAttribute("aria-label", "Edit campaign");
+        var ei = document.createElement("img");
+        ei.src = "icons/edit_icon.png";
+        ei.alt = "Edit";
+        edit.appendChild(ei);
+        edit.addEventListener("click", function () { openCampaignForm(c); });
+        img.appendChild(edit);
+
+        var del = el("button", "camp-delete");
         del.type = "button";
+        del.setAttribute("aria-label", "Delete campaign");
+        var di = document.createElement("img");
+        di.src = "icons/delete_icon.png";
+        di.alt = "Delete";
+        del.appendChild(di);
         del.addEventListener("click", function () {
           askConfirm("Please confirm", "Delete this campaign? This cannot be undone.", "Yes, delete", function () {
             campaigns = campaigns.filter(function (x) { return x.id !== c.id; });
@@ -274,12 +289,26 @@
     newBtn.hidden = false;
   }
 
-  newBtn.addEventListener("click", function () {
+  // Opens the popup empty (new) or filled in (edit). Saving does nothing yet.
+  function openCampaignForm(c) {
     form.reset();
     formError.hidden = true;
+    document.getElementById("camp-modal-title").textContent = c ? "Edit campaign" : "New campaign";
+    if (c) {
+      document.getElementById("c-title").value = c.title || "";
+      document.getElementById("c-date").value = c.date || "";
+      document.getElementById("c-organizer").value = c.organizer || "";
+      document.getElementById("c-start").value = c.start || "";
+      document.getElementById("c-end").value = c.end || "";
+      document.getElementById("c-venue").value = c.venue || "";
+      document.getElementById("c-address").value = c.address || "";
+      document.getElementById("c-desc").value = c.description || "";
+    }
     campModal.classList.add("open");
     document.getElementById("c-title").focus();
-  });
+  }
+
+  newBtn.addEventListener("click", function () { openCampaignForm(null); });
 
   // Save does nothing yet (no database)
   form.addEventListener("submit", function (e) {

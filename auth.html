@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In – AlayDugo</title>
+  <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +16,7 @@
       <button id="menu-toggle" aria-label="Toggle menu">☰</button>
       <ul id="links">
         <li><a href="about.html">About Us</a></li>
-        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="need_blood.html">Donate Now/Need Blood?</a></li>
         <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
         <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
         <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
@@ -52,20 +53,6 @@
           <h1>Create your AlayDugo account</h1>
           <p class="auth-sub">Join the community and help connect donors with patients in need.</p>
           <form id="form-register">
-            <label class="lbl">I want to join as <span class="req">*</span></label>
-            <div class="roles">
-              <label class="role selected">
-                <input type="radio" name="role" value="donor" checked>
-                <strong>Blood Donor</strong>
-                <span>Be available for donation requests</span>
-              </label>
-              <label class="role">
-                <input type="radio" name="role" value="requester">
-                <strong>Blood Requester</strong>
-                <span>Submit a request for a patient</span>
-              </label>
-            </div>
-
             <div class="field">
               <label class="lbl" for="reg-name">Full Name <span class="req">*</span></label>
               <input type="text" id="reg-name" required>
@@ -94,11 +81,28 @@
               </div>
             </div>
 
-            <div class="field">
-              <label class="lbl" for="reg-address">Address <span class="req">*</span></label>
-              <input type="text" id="reg-address" required>
-              <span class="hint">Used only for administration. It is never shown publicly.</span>
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="reg-region">Region <span class="req">*</span></label>
+                <select id="reg-region" required><option value="">Loading…</option></select>
+              </div>
+              <div class="field">
+                <label class="lbl" for="reg-province">Province <span class="req">*</span></label>
+                <select id="reg-province" required disabled><option value="">Select province</option></select>
+              </div>
             </div>
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="reg-city">City / Municipality <span class="req">*</span></label>
+                <select id="reg-city" required disabled><option value="">Select city / municipality</option></select>
+              </div>
+              <div class="field">
+                <label class="lbl" for="reg-barangay">Barangay <span class="req">*</span></label>
+                <select id="reg-barangay" required disabled><option value="">Select barangay</option></select>
+              </div>
+            </div>
+            <p class="form-error" id="addr-error" hidden>Could not load the address list. Please check your internet connection and refresh the page.</p>
+            <span class="hint addr-hint">Address list comes from the Philippine Standard Geographic Code (PSGC). Used only for administration. It is never shown publicly.</span>
 
 
             <div class="row2">

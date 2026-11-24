@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blood Donation Campaigns – AlayDugo</title>
+  <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +16,7 @@
       <button id="menu-toggle" aria-label="Toggle menu">☰</button>
       <ul id="links">
         <li><a href="about.html">About Us</a></li>
-        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="need_blood.html">Donate Now/Need Blood?</a></li>
         <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
         <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
         <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
@@ -78,7 +79,7 @@
   <div class="modal" id="campaign-modal">
     <div class="modal-box camp-modal">
       <div class="modal-head">
-        <h3>New campaign</h3>
+        <h3 id="camp-modal-title">New campaign</h3>
         <button type="button" class="modal-x" aria-label="Close">×</button>
       </div>
       <form id="campaign-form" novalidate>
