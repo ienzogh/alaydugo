@@ -1,4 +1,4 @@
-// Campaigns page: sample campaigns, filters, and admin add / delete.
+// Donate Now page (campaigns): sample campaigns, filters, and admin add / delete.
 // Campaigns are kept in this browser (localStorage) until there is a database.
 (function () {
   var KEY = "alaydugo_campaigns_v2";

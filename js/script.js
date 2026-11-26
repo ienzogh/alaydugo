@@ -1,33 +1,10 @@
+// Shared by every page: mobile menu, login state, Log Out confirmation, login gate and toast message.
+
 // Toggle the mobile menu
 var toggle = document.getElementById("menu-toggle");
 if (toggle) {
   toggle.addEventListener("click", function () {
     document.getElementById("links").classList.toggle("open");
-  });
-}
-
-// Send inquiry popup (open and close only, nothing is sent yet)
-var modal = document.getElementById("inquiry-modal");
-if (modal) {
-  var title = document.getElementById("modal-title");
-
-  function closeModal() {
-    modal.classList.remove("open");
-  }
-
-  document.querySelectorAll(".btn-inquiry").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      title.textContent = "Send inquiry to " + btn.dataset.name;
-      modal.classList.add("open");
-    });
-  });
-
-  modal.querySelector(".modal-cancel").addEventListener("click", closeModal);
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) closeModal();
-  });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") closeModal();
   });
 }
 

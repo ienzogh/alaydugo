@@ -1,3 +1,5 @@
+// Log In / Register / Forgot password page (auth.html)
+
 // Built-in accounts (placeholders until there is a database)
 var ACCOUNTS = [
   { email: "admin@gmail.com", password: "admin123", role: "admin", name: "Admin" },
@@ -153,7 +155,7 @@ document.querySelectorAll(".auth-card form").forEach(function (form) {
         try {
           localStorage.setItem("alaydugo_user", JSON.stringify({ role: account.role, name: account.name, email: account.email }));
         } catch (err) {}
-        window.location.href = "campaigns.html";
+        window.location.href = "donate.html";
       } else {
         document.getElementById("login-error").hidden = false;
       }

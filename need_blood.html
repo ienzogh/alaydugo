@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donate Now/Need Blood? – AlayDugo</title>
+  <title>Need Blood? – AlayDugo</title>
   <link rel="icon" type="image/png" href="icons/favicon.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,8 +17,8 @@
       <button id="menu-toggle" aria-label="Toggle menu">☰</button>
       <ul id="links">
         <li><a href="about.html">About Us</a></li>
-        <li><a href="need_blood.html">Donate Now/Need Blood?</a></li>
-        <li><a href="campaigns.html">Blood Donation Campaigns</a></li>
+        <li><a href="need_blood.html">Need Blood?</a></li>
+        <li><a href="donate.html">Donate Now</a></li>
         <li><a href="auth.html#login" class="btn btn-login">Log In</a></li>
         <li><a href="auth.html#register" class="btn btn-red">Register</a></li>
       </ul>
@@ -25,10 +26,10 @@
   </header>
 
   <div class="fade">
-    <section class="about-intro">
+    <section class="fb-intro">
       <div class="container">
-        <h1>Donate Now/Need Blood?</h1>
-        <p>Choose your blood type and whether you are a blood donor or a blood requester. We will find the hospitals nearest to you.</p>
+        <h1>Find Available Blood Units</h1>
+        <p>Search blood stock by compatibility, distance radius and hospital location in the Philippines.</p>
       </div>
     </section>
 
@@ -47,74 +48,79 @@
       </div>
     </section>
 
-    <section class="campaigns" id="protected" hidden>
+    <section class="fb-main" id="protected" hidden>
       <div class="container">
 
-        <div class="notice">
-          <strong>Urgent blood need?</strong> Contact your hospital or an authorized blood service facility right away. AlayDugo is a community platform and does not replace hospitals or licensed blood banks.
-        </div>
-
         <!-- Search -->
-        <div class="filters filters-find">
+        <div class="fb-search">
           <div>
-            <label for="f-type">Blood Type</label>
+            <label for="f-type">Blood Group Needed</label>
             <select id="f-type">
-              <option value="">Select blood type</option>
-              <option>A+</option><option>A-</option>
-              <option>B+</option><option>B-</option>
-              <option>AB+</option><option>AB-</option>
-              <option>O+</option><option>O-</option>
+              <option value="" selected disabled>Select blood group</option>
+              <option value="A+">A+ (Show Exact &amp; Compatible)</option>
+              <option value="A-">A- (Show Exact &amp; Compatible)</option>
+              <option value="B+">B+ (Show Exact &amp; Compatible)</option>
+              <option value="B-">B- (Show Exact &amp; Compatible)</option>
+              <option value="AB+">AB+ (Show Exact &amp; Compatible)</option>
+              <option value="AB-">AB- (Show Exact &amp; Compatible)</option>
+              <option value="O+">O+ (Show Exact &amp; Compatible)</option>
+              <option value="O-">O- (Show Exact &amp; Compatible)</option>
             </select>
           </div>
           <div>
-            <label for="f-role">I am a</label>
-            <select id="f-role">
-              <option value="">Select one</option>
-              <option value="donor">Blood Donor</option>
-              <option value="requester">Blood Requester</option>
-            </select>
+            <label for="f-city">City or Area</label>
+            <div class="fb-city">
+              <input type="text" id="f-city" value="CTU Main Campus" autocomplete="off" placeholder="e.g. Mandaue City" role="combobox" aria-expanded="false" aria-controls="city-suggest" aria-autocomplete="list">
+              <button type="button" class="fb-city-btn" id="city-btn">Search</button>
+              <ul class="fb-suggest" id="city-suggest" role="listbox" hidden></ul>
+            </div>
           </div>
-          <button type="button" class="btn btn-reset" id="find-btn">Search</button>
+          <div>
+            <div class="fb-radius-head">
+              <label for="f-radius">Search Radius</label>
+              <span id="f-radius-val">10 km</span>
+            </div>
+            <input type="range" id="f-radius" min="1" max="30" value="10">
+          </div>
+          <button type="button" class="btn btn-reset" id="gps-btn">Use My GPS</button>
         </div>
-        <p class="form-error find-error" id="find-error" hidden></p>
+        <p class="form-error fb-error" id="fb-error" hidden></p>
 
-        <!-- Results -->
-        <div id="results" hidden>
-          <p class="donor-count" id="res-note"></p>
-          <div id="res-top"></div>
-          <h2 class="res-h" id="res-others-title" hidden>Other hospitals near you</h2>
-          <div class="hosp-list" id="res-others"></div>
-          <p class="sample-note">Hospital details and blood stock shown here are sample data until hospitals are connected to AlayDugo.</p>
+        <!-- Map + results -->
+        <div class="fb-grid">
+          <div>
+            <div class="fb-head">
+              <h2>Stock Distribution Map</h2>
+              <span id="map-note">Showing within 10 km of CTU Main Campus</span>
+            </div>
+            <div id="map" class="fb-map" role="region" aria-label="Map of hospitals with available blood units"></div>
+          </div>
+          <div>
+            <div class="fb-head">
+              <h2 id="res-title">Available Results</h2>
+              <span>Ranked by nearest distance</span>
+            </div>
+            <div class="fb-results" id="res-list"></div>
+          </div>
+        </div>
+
+        <!-- Compatibility grid -->
+        <div class="cg">
+          <div class="cg-top">
+            <div>
+              <h2>Interactive Compatibility Grid</h2>
+              <p>Select a blood type to view who you can safely receive from.</p>
+            </div>
+            <div class="cg-types" id="cg-types"></div>
+          </div>
+          <div class="cg-profile" id="cg-profile"></div>
+          <div class="cg-scroll">
+            <table class="cg-table" id="cg-table"></table>
+          </div>
+          <p class="sample-note">For education only. Blood compatibility is always confirmed by qualified healthcare professionals.</p>
         </div>
       </div>
     </section>
-  </div>
-
-  <!-- Appointment popup (donors) -->
-  <div class="modal" id="appt-modal">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h3 id="appt-title">Email an appointment</h3>
-        <button type="button" class="modal-x" aria-label="Close">×</button>
-      </div>
-      <p class="modal-lead">Choose one of the hospital's available donation dates. Your email app will open with the appointment request ready to send to the hospital.</p>
-      <form id="appt-form" novalidate>
-        <div class="field">
-          <label class="lbl" for="a-name">Your Full Name <span class="req">*</span></label>
-          <input type="text" id="a-name">
-        </div>
-        <div class="field">
-          <label class="lbl" for="a-phone">Contact Number <span class="req">*</span></label>
-          <input type="tel" id="a-phone" placeholder="09XX XXX XXXX">
-        </div>
-        <div class="field">
-          <label class="lbl" for="a-date">Available Date <span class="req">*</span></label>
-          <select id="a-date"></select>
-        </div>
-        <p class="form-error" id="a-error" hidden></p>
-        <button type="submit" class="btn btn-auth">Send Appointment Email</button>
-      </form>
-    </div>
   </div>
 
   <!-- Footer -->
@@ -142,6 +148,7 @@
   </footer>
 
   <script src="js/script.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/need_blood.js"></script>
 </body>
 </html>
