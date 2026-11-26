@@ -1,8 +1,6 @@
-// Donate Now page (campaigns): sample campaigns, filters, and admin add / delete.
-// Campaigns are kept in this browser (localStorage) until there is a database.
+// Donate Now page (campaigns): sample campaigns, filters and registration.
+// Campaigns are hardcoded samples until there is a database.
 (function () {
-  var KEY = "alaydugo_campaigns_v2";
-
   var SAMPLES = [
     {
       id: "sample-1",
@@ -31,15 +29,14 @@
   ];
 
   var ICONS = {
-    calendar: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
-    clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
-    pin: '<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
-    people: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.5-1.5-4.5-4-5.5"/></svg>'
+    calendar: "icons/calendar.png",
+    clock: "icons/clock.png",
+    location: "icons/location.png",
+    organizer: "icons/organizer.png"
   };
   var DROP = '<svg viewBox="0 0 24 24"><path d="M12 2.5S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.5-7-12.5z"/></svg>';
 
   var me = getUser();
-  var isAdmin = !!(me && me.role === "admin");
 
   var grid = document.getElementById("camp-grid");
   var emptyMsg = document.getElementById("camp-empty");
@@ -47,11 +44,7 @@
   var cityField = document.getElementById("city");
   var dateField = document.getElementById("date");
   var resetBtn = document.getElementById("reset-btn");
-  var newBtn = document.getElementById("new-campaign-btn");
-  var campModal = document.getElementById("campaign-modal");
   var confirmModal = document.getElementById("confirm-modal");
-  var form = document.getElementById("campaign-form");
-  var formError = document.getElementById("camp-error");
   // Campaigns this user registered for (kept in this browser until there is a database)
   var regKey = "alaydugo_regs_" + (me ? (me.email || me.role) : "guest");
   var regs = [];
@@ -60,37 +53,6 @@
   function saveRegs() {
     try { localStorage.setItem(regKey, JSON.stringify(regs)); } catch (e) {}
   }
-
-  // ---- storage ----
-  function load() {
-    var raw = null;
-    try { raw = localStorage.getItem(KEY); } catch (e) {}
-    if (raw) {
-      try {
-        var saved = JSON.parse(raw);
-        // The sample campaigns always use their pictures from the sample_pics folder
-        saved.forEach(function (c) {
-          SAMPLES.forEach(function (smp) {
-            if (c.id === smp.id) c.image = smp.image;
-          });
-        });
-        return saved;
-      } catch (e) {}
-    }
-    return JSON.parse(JSON.stringify(SAMPLES));
-  }
-
-  var campaigns = load();
-
-  function save() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(campaigns));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-  save();
 
   // ---- helpers ----
   function el(tag, cls, text) {
@@ -115,7 +77,10 @@
 
   function metaRow(icon, text) {
     var li = el("li");
-    li.innerHTML = icon;
+    var pic = el("img");
+    pic.src = icon;
+    pic.alt = "";
+    li.appendChild(pic);
     li.appendChild(document.createTextNode(text));
     return li;
   }
@@ -135,7 +100,7 @@
 
   function render() {
     grid.innerHTML = "";
-    var list = campaigns.filter(matches).sort(function (a, b) {
+    var list = SAMPLES.filter(matches).sort(function (a, b) {
       return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
     });
 
@@ -163,33 +128,6 @@
       badge.appendChild(el("span", "d", String(d.getDate())));
       img.appendChild(badge);
 
-      if (isAdmin) {
-        var edit = el("button", "camp-edit");
-        edit.type = "button";
-        edit.setAttribute("aria-label", "Edit campaign");
-        var ei = document.createElement("img");
-        ei.src = "icons/edit_icon.png";
-        ei.alt = "Edit";
-        edit.appendChild(ei);
-        edit.addEventListener("click", function () { openCampaignForm(c); });
-        img.appendChild(edit);
-
-        var del = el("button", "camp-delete");
-        del.type = "button";
-        del.setAttribute("aria-label", "Delete campaign");
-        var di = document.createElement("img");
-        di.src = "icons/delete_icon.png";
-        di.alt = "Delete";
-        del.appendChild(di);
-        del.addEventListener("click", function () {
-          askConfirm("Please confirm", "Delete this campaign? This cannot be undone.", "Yes, delete", function () {
-            campaigns = campaigns.filter(function (x) { return x.id !== c.id; });
-            save();
-            render();
-          });
-        });
-        img.appendChild(del);
-      }
       card.appendChild(img);
 
       var body = el("div", "camp-body");
@@ -200,37 +138,35 @@
       if (c.start && c.end) meta.appendChild(metaRow(ICONS.clock, fmtTime(c.start) + " – " + fmtTime(c.end)));
       else if (c.start) meta.appendChild(metaRow(ICONS.clock, "Starts at " + fmtTime(c.start)));
       else if (c.end) meta.appendChild(metaRow(ICONS.clock, "Ends at " + fmtTime(c.end)));
-      meta.appendChild(metaRow(ICONS.pin, c.venue + ", " + c.address));
-      meta.appendChild(metaRow(ICONS.people, "Organizer: " + c.organizer));
+      meta.appendChild(metaRow(ICONS.location, c.venue + ", " + c.address));
+      meta.appendChild(metaRow(ICONS.organizer, "Organizer: " + c.organizer));
       body.appendChild(meta);
 
       body.appendChild(el("p", "camp-desc", c.description));
 
-      // Register / cancel registration (donors and requesters)
-      if (!isAdmin) {
-        var joined = regs.indexOf(c.id) !== -1;
-        var reg = el("button", "btn btn-register" + (joined ? " registered" : ""), joined ? "\u2713 Registered \u2013 Cancel" : "Register");
-        reg.type = "button";
-        reg.addEventListener("click", function () {
-          if (joined) {
-            askConfirm("Please confirm", "Cancel your registration for this campaign?", "Yes, cancel", function () {
-              regs = regs.filter(function (id) { return id !== c.id; });
-              saveRegs();
-              render();
-              showToast("Registration cancelled");
-            });
-          } else {
-            var when = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-            askConfirm("Register for this campaign", "Register for \u201C" + c.title + "\u201D on " + when + "?", "Yes, register", function () {
-              regs.push(c.id);
-              saveRegs();
-              render();
-              showToast("Registration confirmed");
-            });
-          }
-        });
-        body.appendChild(reg);
-      }
+      // Register / cancel registration
+      var joined = regs.indexOf(c.id) !== -1;
+      var reg = el("button", "btn btn-register" + (joined ? " registered" : ""), joined ? "\u2713 Registered \u2013 Cancel" : "Register");
+      reg.type = "button";
+      reg.addEventListener("click", function () {
+        if (joined) {
+          askConfirm("Please confirm", "Cancel your registration for this campaign?", "Yes, cancel", function () {
+            regs = regs.filter(function (id) { return id !== c.id; });
+            saveRegs();
+            render();
+            showToast("Registration cancelled");
+          });
+        } else {
+          var when = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+          askConfirm("Register for this campaign", "Register for \u201C" + c.title + "\u201D on " + when + "?", "Yes, register", function () {
+            regs.push(c.id);
+            saveRegs();
+            render();
+            showToast("Registration confirmed");
+          });
+        }
+      });
+      body.appendChild(reg);
 
       card.appendChild(body);
       grid.appendChild(card);
@@ -266,7 +202,7 @@
     if (e.key === "Escape") closeAll();
   });
 
-  // ---- confirm popup (register, cancel registration, delete) ----
+  // ---- confirm popup (register, cancel registration) ----
   var onYes = null;
 
   function askConfirm(title, text, yesLabel, callback) {
@@ -282,37 +218,6 @@
     onYes = null;
     closeAll();
     if (run) run();
-  });
-
-  // ---- admin: new campaign (the popup opens, but nothing is added yet) ----
-  if (isAdmin) {
-    newBtn.hidden = false;
-  }
-
-  // Opens the popup empty (new) or filled in (edit). Saving does nothing yet.
-  function openCampaignForm(c) {
-    form.reset();
-    formError.hidden = true;
-    document.getElementById("camp-modal-title").textContent = c ? "Edit campaign" : "New campaign";
-    if (c) {
-      document.getElementById("c-title").value = c.title || "";
-      document.getElementById("c-date").value = c.date || "";
-      document.getElementById("c-organizer").value = c.organizer || "";
-      document.getElementById("c-start").value = c.start || "";
-      document.getElementById("c-end").value = c.end || "";
-      document.getElementById("c-venue").value = c.venue || "";
-      document.getElementById("c-address").value = c.address || "";
-      document.getElementById("c-desc").value = c.description || "";
-    }
-    campModal.classList.add("open");
-    document.getElementById("c-title").focus();
-  }
-
-  newBtn.addEventListener("click", function () { openCampaignForm(null); });
-
-  // Save does nothing yet (no database)
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
   });
 
   render();

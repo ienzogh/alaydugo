@@ -19,6 +19,12 @@ function getUser() {
 
 var currentUser = getUser();
 
+// Admin accounts no longer exist: sign out any old admin login saved in this browser
+if (currentUser && currentUser.role === "admin") {
+  try { localStorage.removeItem("alaydugo_user"); } catch (e) {}
+  currentUser = null;
+}
+
 // Nav: "Log In" becomes "Log Out" when someone is logged in
 var loginLink = document.querySelector(".btn-login");
 if (loginLink && currentUser) {
@@ -74,6 +80,12 @@ if (registerLink && currentUser) {
   registerLink.parentNode.hidden = true;
 }
 
+// Home page: no Register button in the red banner once logged in
+var ctaRegister = document.getElementById("cta-register");
+if (ctaRegister && currentUser) {
+  ctaRegister.hidden = true;
+}
+
 // Pages that need a login: show the content instead of the "Log in to continue" card
 var gateEl = document.getElementById("gate");
 var protectedEl = document.getElementById("protected");
@@ -94,3 +106,46 @@ function showToast(message) {
     setTimeout(function () { t.remove(); }, 300);
   }, 2600);
 }
+
+// Emergency SOS button (on every page) with one-tap hotlines
+(function () {
+  var HOTLINES = [
+    { name: "National Emergency Hotline", number: "911", tel: "911" },
+    { name: "Philippine Red Cross Hotline", number: "143", tel: "143" },
+    { name: "Red Cross Cebu Blood Bank", number: "(032) 253-4611", tel: "+63322534611" },
+    { name: "Vicente Sotto Memorial Medical Center", number: "(032) 253-9891", tel: "+63322539891" }
+  ];
+
+  var button = document.createElement("button");
+  button.type = "button";
+  button.className = "sos-btn";
+  button.textContent = "SOS";
+  button.setAttribute("aria-label", "Emergency SOS for urgent blood needs");
+
+  var box = document.createElement("div");
+  box.className = "modal";
+  box.innerHTML =
+    '<div class="modal-box confirm-box" role="dialog" aria-modal="true" aria-labelledby="sos-title">' +
+      '<div class="modal-head"><h3 id="sos-title">\uD83D\uDEA8 Urgent blood needed?</h3>' +
+      '<button type="button" class="modal-x" aria-label="Close">\u00D7</button></div>' +
+      '<p>Tap a number to call. If a life is in danger, call 911 first.</p>' +
+      '<div class="sos-list">' +
+        HOTLINES.map(function (h) {
+          return '<a href="tel:' + h.tel + '"><span>' + h.name + '</span><strong>' + h.number + '</strong></a>';
+        }).join("") +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(button);
+  document.body.appendChild(box);
+
+  function close() { box.classList.remove("open"); }
+  button.addEventListener("click", function () { box.classList.add("open"); });
+  box.querySelector(".modal-x").addEventListener("click", close);
+  box.addEventListener("click", function (e) {
+    if (e.target === box) close();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") close();
+  });
+})();

@@ -1,5 +1,6 @@
 // Need Blood? page (need_blood.html): find available blood units near a Philippine location.
-// Hospital data below is hardcoded SAMPLE data until hospitals are connected (no database yet).
+// Stock and email addresses below are SAMPLE data until hospitals are connected (no database yet).
+// Phone numbers are publicly listed hotlines (checked November 2026).
 (function () {
   if (!getUser() || !document.getElementById("f-type")) return;
 
@@ -94,15 +95,15 @@
 
   // stock = units on hand, in the order of TYPES (A+, A-, B+, B-, AB+, AB-, O+, O-)
   var HOSPITALS = [
-    { name: "Cebu Doctors' University Hospital", area: "Osmeña Blvd, Cebu City", phone: "(032) 555-0101", email: "bloodbank@cdu.example.com", lat: 10.3170, lng: 123.8910, stock: [14, 3, 9, 0, 6, 1, 22, 4] },
-    { name: "Chong Hua Hospital", area: "Fuente Osmeña, Cebu City", phone: "(032) 555-0102", email: "bloodbank@chonghua.example.com", lat: 10.3080, lng: 123.8920, stock: [8, 0, 12, 2, 4, 0, 15, 0] },
-    { name: "Vicente Sotto Memorial Medical Center", area: "B. Rodriguez St, Cebu City", phone: "(032) 555-0103", email: "bloodbank@vsmmc.example.com", lat: 10.3010, lng: 123.8930, stock: [20, 6, 18, 5, 8, 2, 30, 7] },
-    { name: "Perpetual Succour Hospital", area: "Gorordo Ave, Cebu City", phone: "(032) 555-0104", email: "bloodbank@pshospital.example.com", lat: 10.3100, lng: 123.8900, stock: [5, 0, 7, 0, 2, 0, 9, 1] },
-    { name: "Cebu Velez General Hospital", area: "F. Ramos St, Cebu City", phone: "(032) 555-0105", email: "bloodbank@velez.example.com", lat: 10.3140, lng: 123.8940, stock: [11, 2, 4, 1, 3, 0, 13, 2] },
-    { name: "Philippine Red Cross – Cebu Chapter", area: "Osmeña Blvd, Cebu City", phone: "(032) 555-0106", email: "bloodcenter@redcross.example.com", lat: 10.3125, lng: 123.8915, stock: [26, 8, 21, 6, 10, 3, 38, 9] },
-    { name: "Mandaue City Hospital", area: "Mandaue City, Cebu", phone: "(032) 555-0107", email: "bloodbank@mandaue.example.com", lat: 10.3340, lng: 123.9380, stock: [7, 0, 6, 1, 3, 0, 12, 2] },
-    { name: "Lapu-Lapu City Hospital", area: "Gun-ob, Lapu-Lapu City", phone: "(032) 555-0108", email: "bloodbank@llch.example.com", lat: 10.3100, lng: 123.9640, stock: [9, 1, 10, 3, 5, 1, 17, 3] },
-    { name: "Talisay District Hospital", area: "Talisay City, Cebu", phone: "(032) 555-0109", email: "bloodbank@talisay.example.com", lat: 10.2625, lng: 123.8420, stock: [6, 1, 5, 0, 2, 0, 10, 1] }
+    { name: "Cebu Doctors' University Hospital", area: "Osmeña Blvd, Cebu City", phone: "(032) 255-5555", email: "bloodbank@cdu.example.com", lat: 10.3170, lng: 123.8910, stock: [14, 3, 9, 0, 6, 1, 22, 4] },
+    { name: "Chong Hua Hospital", area: "Fuente Osmeña, Cebu City", phone: "(032) 255-8000", email: "bloodbank@chonghua.example.com", lat: 10.3080, lng: 123.8920, stock: [8, 0, 12, 2, 4, 0, 15, 0] },
+    { name: "Vicente Sotto Memorial Medical Center", area: "B. Rodriguez St, Cebu City", phone: "(032) 253-9891", email: "bloodbank@vsmmc.example.com", lat: 10.3010, lng: 123.8930, stock: [20, 6, 18, 5, 8, 2, 30, 7] },
+    { name: "Perpetual Succour Hospital", area: "Gorordo Ave, Cebu City", phone: "(032) 233-8620", email: "bloodbank@pshospital.example.com", lat: 10.3100, lng: 123.8900, stock: [5, 0, 7, 0, 2, 0, 9, 1] },
+    { name: "Cebu Velez General Hospital", area: "F. Ramos St, Cebu City", phone: "(032) 253-1871", email: "bloodbank@velez.example.com", lat: 10.3140, lng: 123.8940, stock: [11, 2, 4, 1, 3, 0, 13, 2] },
+    { name: "Philippine Red Cross – Cebu Chapter", area: "Osmeña Blvd, Cebu City", phone: "(032) 253-4611", email: "bloodcenter@redcross.example.com", lat: 10.3125, lng: 123.8915, stock: [26, 8, 21, 6, 10, 3, 38, 9] },
+    { name: "Mandaue City Hospital", area: "Mandaue City, Cebu", phone: "(032) 345-9740", email: "bloodbank@mandaue.example.com", lat: 10.3340, lng: 123.9380, stock: [7, 0, 6, 1, 3, 0, 12, 2] },
+    { name: "Lapu-Lapu City Hospital", area: "Gun-ob, Lapu-Lapu City", phone: "(032) 340-0248", email: "bloodbank@llch.example.com", lat: 10.3100, lng: 123.9640, stock: [9, 1, 10, 3, 5, 1, 17, 3] },
+    { name: "Talisay District Hospital", area: "Talisay City, Cebu", phone: "(032) 273-3226", email: "bloodbank@talisay.example.com", lat: 10.2625, lng: 123.8420, stock: [6, 1, 5, 0, 2, 0, 10, 1] }
   ];
 
   function el(tag, cls, text) {
@@ -234,7 +235,10 @@
       btn.type = "button";
       btn.addEventListener("click", function (e) { e.stopPropagation(); requestUnits(r.h, r.type, r.units); });
       right.appendChild(btn);
-      right.appendChild(el("p", "fb-phone", r.h.phone));
+      var call = el("a", "fb-phone", r.h.phone);
+      call.href = "tel:+63" + r.h.phone.replace(/\D/g, "").slice(1);
+      call.addEventListener("click", function (e) { e.stopPropagation(); });
+      right.appendChild(call);
       card.appendChild(right);
 
       card.addEventListener("click", function () {
@@ -439,10 +443,6 @@
     info.appendChild(el("h3", "", "Blood Type " + cgSel + " Clinical Profile"));
     info.appendChild(el("p", "", PROFILE[cgSel]));
     var line = el("p", "cg-line");
-    var donate = el("span", "cg-pair");
-    donate.appendChild(el("strong", "", "Can donate red cells to: "));
-    donate.appendChild(colored(GIVES_TO[cgSel], "cg-to"));
-    line.appendChild(donate);
     var receive = el("span", "cg-pair");
     receive.appendChild(el("strong", "", "Can receive red cells from: "));
     receive.appendChild(colored(canReceiveFrom(cgSel), "cg-from"));
@@ -466,7 +466,7 @@
       tr.appendChild(th);
       TYPES.forEach(function (d) {
         var ok = GIVES_TO[d].indexOf(r) !== -1;
-        var td = el("td", ok ? "yes" : "no", ok ? "Yes" : "No");
+        var td = el("td", ok ? "yes" : "no", ok ? "✅" : "❌");
         td.setAttribute("aria-label", r + " can" + (ok ? "" : "not") + " receive from " + d);
         tr.appendChild(td);
       });

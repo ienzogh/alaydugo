@@ -2,7 +2,6 @@
 
 // Built-in accounts (placeholders until there is a database)
 var ACCOUNTS = [
-  { email: "admin@gmail.com", password: "admin123", role: "admin", name: "Admin" },
   { email: "user@gmail.com", password: "user123", role: "user", name: "User" }
 ];
 
@@ -24,111 +23,35 @@ function showView() {
 window.addEventListener("hashchange", showView);
 showView();
 
-// Address: Region > Province > City/Municipality > Barangay, loaded from the PSGC Cloud API (psgc.cloud).
-// If it cannot be reached, the same lists are loaded from the PSGC mirror at psgc.gitlab.io.
-var SOURCES = ["https://psgc.cloud/api", "https://psgc.gitlab.io/api"];
-var apiBase = null;
+// Address: City/Municipality > Barangay (a hardcoded sample list, not every place in Cebu)
+var ADDRESSES = {
+  "Cebu City": ["Apas", "Banilad", "Capitol Site", "Guadalupe", "Lahug", "Mabolo", "Talamban", "Tisa"],
+  "Consolacion": ["Cansaga", "Casili", "Jugan", "Nangka", "Pitogo", "Tayud"],
+  "Lapu-Lapu City": ["Basak", "Gun-ob", "Mactan", "Marigondon", "Pajo", "Pusok"],
+  "Liloan": ["Catarman", "Cotcot", "Jubay", "Poblacion", "Tayud", "Yati"],
+  "Mandaue City": ["Alang-Alang", "Bakilid", "Banilad", "Centro", "Subangdaku", "Tipolo"],
+  "Minglanilla": ["Calajo-an", "Linao", "Pakigne", "Tulay", "Tunghaan", "Tungkop"],
+  "Talisay City": ["Bulacao", "Lawaan I", "Poblacion", "San Roque", "Tabunok"]
+};
 
-var regionSel = document.getElementById("reg-region");
-var provinceSel = document.getElementById("reg-province");
 var citySel = document.getElementById("reg-city");
 var barangaySel = document.getElementById("reg-barangay");
 
-function sortByName(items) {
-  if (!Array.isArray(items) && items && Array.isArray(items.data)) items = items.data;
-  return items.sort(function (a, b) { return a.name.localeCompare(b.name); });
-}
-
-function load(base, path) {
-  return fetch(base + path).then(function (r) {
-    if (!r.ok) throw new Error("bad response");
-    return r.json();
-  }).then(sortByName);
-}
-
-// Regions decide which source is used for the rest of the lists
-function loadRegions() {
-  var i = 0;
-  function next() {
-    if (i >= SOURCES.length) return Promise.reject(new Error("no source"));
-    var base = SOURCES[i++];
-    return load(base, "/regions").then(function (items) {
-      apiBase = base;
-      return items;
-    }).catch(next);
-  }
-  return next();
-}
-
-function getList(path) {
-  return load(apiBase, path);
-}
-
-function fill(select, placeholder, items) {
-  select.innerHTML = "";
-  var first = document.createElement("option");
-  first.value = "";
-  first.textContent = placeholder;
-  select.appendChild(first);
-  items.forEach(function (item) {
+function addOptions(select, names) {
+  names.forEach(function (name) {
     var o = document.createElement("option");
-    o.value = item.code;
-    o.textContent = item.name;
+    o.value = name;
+    o.textContent = name;
     select.appendChild(o);
   });
-  select.disabled = items.length === 0;
 }
 
-function reset(select, placeholder) {
-  fill(select, placeholder, []);
-}
-
-function addressFailed() {
-  document.getElementById("addr-error").hidden = false;
-}
-
-loadRegions().then(function (items) {
-  fill(regionSel, "Select region", items);
-}).catch(function () {
-  reset(regionSel, "Unavailable");
-  addressFailed();
-});
-
-regionSel.addEventListener("change", function () {
-  reset(provinceSel, "Select province");
-  reset(citySel, "Select city / municipality");
-  reset(barangaySel, "Select barangay");
-  provinceSel.required = true;
-  if (!regionSel.value) return;
-  getList("/regions/" + regionSel.value + "/provinces").then(function (items) {
-    if (items.length) {
-      fill(provinceSel, "Select province", items);
-      return;
-    }
-    // e.g. Metro Manila has no provinces: go straight to its cities
-    reset(provinceSel, "Not applicable");
-    provinceSel.required = false;
-    return getList("/regions/" + regionSel.value + "/cities-municipalities").then(function (cities) {
-      fill(citySel, "Select city / municipality", cities);
-    });
-  }).catch(addressFailed);
-});
-
-provinceSel.addEventListener("change", function () {
-  reset(citySel, "Select city / municipality");
-  reset(barangaySel, "Select barangay");
-  if (!provinceSel.value) return;
-  getList("/provinces/" + provinceSel.value + "/cities-municipalities").then(function (items) {
-    fill(citySel, "Select city / municipality", items);
-  }).catch(addressFailed);
-});
+addOptions(citySel, Object.keys(ADDRESSES));
 
 citySel.addEventListener("change", function () {
-  reset(barangaySel, "Select barangay");
-  if (!citySel.value) return;
-  getList("/cities-municipalities/" + citySel.value + "/barangays").then(function (items) {
-    fill(barangaySel, "Select barangay", items);
-  }).catch(addressFailed);
+  barangaySel.length = 1; // keep only "Select barangay"
+  barangaySel.disabled = !citySel.value;
+  if (citySel.value) addOptions(barangaySel, ADDRESSES[citySel.value]);
 });
 
 // Forms do nothing yet (no database)
