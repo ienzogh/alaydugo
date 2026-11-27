@@ -1,0 +1,49 @@
+/* Base */
+:root {
+  --primary: #B71C1C;
+  --secondary: #E53935;
+  --bg: #FFFFFF;
+  --light: #F8F9FA;
+  --text: #212121;
+  --pink: #FFEBEE;
+  --muted: #6b6b6b;
+  --nav-h: 72px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+@media (max-width: 800px) {
+  :root {
+    --nav-h: 64px;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+}

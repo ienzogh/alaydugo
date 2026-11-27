@@ -1,0 +1,161 @@
+/* Navbar */
+.nav .btn.btn-login {
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 6px 16px;
+  border: 2px solid #ebebeb;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.nav .btn.btn-login:hover {
+  background: #fff;
+  color: #000;
+  border-color: #ebebeb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(183, 28, 28, .2);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  background: #8E0000;
+  box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  z-index: 10;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--nav-h);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.brand-logo {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.brand-logo {
+  width: 56px;
+  height: 56px;
+}
+
+.brand-logo img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  width: 209.84%;
+  height: auto;
+  left: -54.92%;
+  top: -21.52%;
+}
+
+footer .brand-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav ul a {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: color .2s;
+}
+
+.nav ul li:nth-last-child(2) {
+  margin-right: -16px;
+}
+
+.nav ul a:hover {
+  color: #FFCDD2;
+}
+
+.nav .btn {
+  padding: 8px 18px;
+  color: #fff;
+}
+
+.nav .btn:hover {
+  color: #fff;
+}
+
+.nav .btn.btn-red {
+  background: #FFC107;
+  color: #3E0000;
+  border: 2px solid #FFC107;
+  padding: 6px 16px;
+}
+
+.nav .btn.btn-red:hover {
+  background: #FFD54F;
+  color: #3E0000;
+  border-color: #FFD54F;
+}
+
+#menu-toggle {
+  display: none;
+  background: none;
+  border: 0;
+  font-size: 26px;
+  cursor: pointer;
+  color: #fff;
+}
+
+footer .brand {
+  color: #fff;
+}
+
+@media (max-width: 800px) {
+  .brand {
+    font-size: 20px;
+    gap: 10px;
+  }
+
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+  }
+
+  #menu-toggle {
+    display: block;
+  }
+
+  .nav ul {
+    display: none;
+    position: absolute;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    background: #8E0000;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px 20px;
+    box-shadow: 0 10px 18px rgba(0,0,0,.2);
+  }
+
+  .nav ul.open {
+    display: flex;
+  }
+}

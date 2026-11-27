@@ -1,0 +1,709 @@
+/* Need Blood? page */
+.res-none {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 20px 24px;
+  color: var(--muted);
+}
+
+.sample-note {
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.donor-count {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 28px 0 14px;
+}
+
+.fb-intro {
+  padding: 56px 0 8px;
+  text-align: center;
+}
+
+.fb-intro h1 {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin: 14px 0 10px;
+}
+
+.fb-intro p {
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.fb-main {
+  padding: 36px 0 70px;
+}
+
+.fb-search {
+  display: grid;
+  grid-template-columns: 1.4fr 1.2fr 1.2fr auto;
+  gap: 24px;
+  align-items: end;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 22px;
+  padding: 26px 28px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.05);
+}
+
+.fb-search label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.fb-search select,
+.fb-search input[type="text"] {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: #fff;
+}
+
+.fb-search select:focus,
+.fb-search input:focus {
+  outline: none;
+  border-color: var(--secondary);
+}
+
+.fb-radius-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.fb-radius-head label {
+  margin: 0;
+}
+
+.fb-radius-head span {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.fb-search input[type="range"] {
+  width: 100%;
+  accent-color: var(--secondary);
+  margin: 10px 0 16px;
+}
+
+.fb-search .btn-reset {
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--secondary);
+  padding: 12px 24px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fb-error {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.fb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 44px;
+  align-items: start;
+}
+
+.fb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: nowrap;
+}
+
+.fb-head h2 {
+  font-size: 24px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.fb-head span {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: right;
+  min-width: 0;
+}
+
+.fb-map {
+  height: 520px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  z-index: 0;
+  background: #eef0f2;
+}
+
+.fb-map-off {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 24px;
+}
+
+.fb-results {
+  height: 520px;
+  overflow-y: auto;
+  padding: 2px 8px 2px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fb-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.05);
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.fb-card:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 8px 22px rgba(183,28,28,.12);
+}
+
+.fb-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.fb-type {
+  background: var(--pink);
+  color: var(--primary);
+  font-weight: 800;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.fb-status {
+  background: #E6F6EC;
+  color: #167a3e;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.fb-status.low {
+  background: #FFF3D6;
+  color: #8a6100;
+}
+
+.fb-status.crit {
+  background: #FDE7E7;
+  color: #b00020;
+}
+
+.fb-compat {
+  background: #eef2ff;
+  color: #3b4cca;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.fb-card h3 {
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.fb-loc {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.fb-loc strong {
+  color: var(--primary);
+}
+
+.fb-card-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.fb-card-side .btn-register {
+  width: auto;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.fb-phone {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.fb-pin-wrap {
+  background: none;
+  border: 0;
+}
+
+.fb-pin {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,.3);
+}
+
+.fb-pin span {
+  transform: rotate(45deg);
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.fb-pin.you {
+  background: #1a73e8;
+}
+
+/* Blood compatibility table */
+.cg {
+  margin-top: 60px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 22px;
+  padding: 30px 32px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.05);
+}
+
+.cg-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.cg-top h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.cg-top p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.cg-types {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cg-type {
+  border: 1px solid #ebebeb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+.cg-type:hover {
+  background: var(--pink);
+}
+
+.cg-type.on {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.cg-profile {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--pink);
+  border-radius: 16px;
+  padding: 22px 26px;
+  margin-bottom: 24px;
+}
+
+.cg-badge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  border-radius: 14px;
+  min-width: 78px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.cg-profile h3 {
+  color: var(--primary);
+  font-size: 19px;
+  margin-bottom: 2px;
+}
+
+.cg-profile p {
+  font-size: 15px;
+}
+
+.cg-line {
+  margin-top: 8px;
+  font-size: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+
+.cg-pair {
+  display: inline-block;
+}
+
+.cg-from {
+  color: #167a3e;
+  font-weight: 700;
+}
+
+.cg-scroll {
+  overflow-x: auto;
+}
+
+.cg-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.cg-table th,
+.cg-table td {
+  padding: 14px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
+}
+
+.cg-table thead th {
+  background: #f1f4f8;
+  font-weight: 700;
+}
+
+.cg-table thead th:first-child,
+.cg-table tbody th {
+  text-align: left;
+  padding-left: 18px;
+}
+
+.cg-table thead th.sel {
+  background: #FDE7E9;
+}
+
+.cg-table tr.sel th,
+.cg-table tr.sel td {
+  background: #FDEEF0;
+}
+
+.cg-table tr.sel td.yes {
+  background: #E8F8EE;
+}
+
+.cg-rowtype {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--primary);
+  font-weight: 800;
+  border-radius: 8px;
+  padding: 5px 12px;
+}
+
+.cg-table td.yes {
+  color: #167a3e;
+  font-weight: 800;
+}
+
+.cg-table td.no {
+  color: #bbb;
+}
+
+/* City search suggestions */
+.fb-city {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+.fb-city input {
+  flex: 1;
+  min-width: 0;
+}
+
+.fb-suggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.14);
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.fb-suggest li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fb-suggest li:hover,
+.fb-suggest li.on {
+  background: var(--pink);
+  color: var(--primary);
+}
+
+.fb-card.top {
+  border: 2px solid var(--secondary);
+  box-shadow: 0 10px 30px rgba(183,28,28,.14);
+}
+
+.fb-flag {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.cg-table td img {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.cg-table td.yes {
+  font-size: 14px;
+}
+
+.cg-table td.no {
+  font-size: 14px;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.fb-city .fb-city-btn {
+  background: #fff;
+  color: #000;
+  border: 2px solid #ebebeb;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.fb-city .fb-city-btn:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(183,28,28,.2);
+}
+
+.fb-card {
+  position: relative;
+  align-items: center;
+  padding-left: 68px;
+}
+
+.fb-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Rank number: scalloped seal in the top left of each result */
+.fb-rank {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background: #6f6f76;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  clip-path: polygon(
+    50.00% 6.00%, 51.60% 4.17%, 53.32% 2.59%,
+    55.11% 1.41%, 56.92% 0.78%, 58.68% 0.76%,
+    60.33% 1.38%, 61.82% 2.60%, 63.10% 4.31%,
+    64.17% 6.39%, 65.05% 8.65%, 67.18% 7.48%,
+    69.33% 6.58%, 71.42% 6.09%, 73.34% 6.11%,
+    75.00% 6.70%, 76.34% 7.85%, 77.32% 9.50%,
+    77.94% 11.55%, 78.23% 13.87%, 78.28% 16.29%,
+    80.68% 15.92%, 83.01% 15.81%, 85.14% 16.06%,
+    86.94% 16.74%, 88.30% 17.86%, 89.17% 19.40%,
+    89.52% 21.28%, 89.40% 23.42%, 88.89% 25.70%,
+    88.11% 28.00%, 90.49% 28.47%, 92.72% 29.17%,
+    94.63% 30.13%, 96.09% 31.38%, 96.98% 32.90%,
+    97.27% 34.64%, 96.96% 36.53%, 96.11% 38.50%,
+    94.85% 40.47%, 93.33% 42.36%, 95.41% 43.62%,
+    97.27% 45.03%, 98.74% 46.59%, 99.68% 48.27%,
+    100.00% 50.00%, 99.68% 51.73%, 98.74% 53.41%,
+    97.27% 54.97%, 95.41% 56.38%, 93.33% 57.64%,
+    94.85% 59.53%, 96.11% 61.50%, 96.96% 63.47%,
+    97.27% 65.36%, 96.98% 67.10%, 96.09% 68.62%,
+    94.63% 69.87%, 92.72% 70.83%, 90.49% 71.53%,
+    88.11% 72.00%, 88.89% 74.30%, 89.40% 76.58%,
+    89.52% 78.72%, 89.17% 80.60%, 88.30% 82.14%,
+    86.94% 83.26%, 85.14% 83.94%, 83.01% 84.19%,
+    80.68% 84.08%, 78.28% 83.71%, 78.23% 86.13%,
+    77.94% 88.45%, 77.32% 90.50%, 76.34% 92.15%,
+    75.00% 93.30%, 73.34% 93.89%, 71.42% 93.91%,
+    69.33% 93.42%, 67.18% 92.52%, 65.05% 91.35%,
+    64.17% 93.61%, 63.10% 95.69%, 61.82% 97.40%,
+    60.33% 98.62%, 58.68% 99.24%, 56.92% 99.22%,
+    55.11% 98.59%, 53.32% 97.41%, 51.60% 95.83%,
+    50.00% 94.00%, 48.40% 95.83%, 46.68% 97.41%,
+    44.89% 98.59%, 43.08% 99.22%, 41.32% 99.24%,
+    39.67% 98.62%, 38.18% 97.40%, 36.90% 95.69%,
+    35.83% 93.61%, 34.95% 91.35%, 32.82% 92.52%,
+    30.67% 93.42%, 28.58% 93.91%, 26.66% 93.89%,
+    25.00% 93.30%, 23.66% 92.15%, 22.68% 90.50%,
+    22.06% 88.45%, 21.77% 86.13%, 21.72% 83.71%,
+    19.32% 84.08%, 16.99% 84.19%, 14.86% 83.94%,
+    13.06% 83.26%, 11.70% 82.14%, 10.83% 80.60%,
+    10.48% 78.72%, 10.60% 76.58%, 11.11% 74.30%,
+    11.89% 72.00%, 9.51% 71.53%, 7.28% 70.83%,
+    5.37% 69.87%, 3.91% 68.62%, 3.02% 67.10%,
+    2.73% 65.36%, 3.04% 63.47%, 3.89% 61.50%,
+    5.15% 59.53%, 6.67% 57.64%, 4.59% 56.38%,
+    2.73% 54.97%, 1.26% 53.41%, 0.32% 51.73%,
+    0.00% 50.00%, 0.32% 48.27%, 1.26% 46.59%,
+    2.73% 45.03%, 4.59% 43.62%, 6.67% 42.36%,
+    5.15% 40.47%, 3.89% 38.50%, 3.04% 36.53%,
+    2.73% 34.64%, 3.02% 32.90%, 3.91% 31.38%,
+    5.37% 30.13%, 7.28% 29.17%, 9.51% 28.47%,
+    11.89% 28.00%, 11.11% 25.70%, 10.60% 23.42%,
+    10.48% 21.28%, 10.83% 19.40%, 11.70% 17.86%,
+    13.06% 16.74%, 14.86% 16.06%, 16.99% 15.81%,
+    19.32% 15.92%, 21.72% 16.29%, 21.77% 13.87%,
+    22.06% 11.55%, 22.68% 9.50%, 23.66% 7.85%,
+    25.00% 6.70%, 26.66% 6.11%, 28.58% 6.09%,
+    30.67% 6.58%, 32.82% 7.48%, 34.95% 8.65%,
+    35.83% 6.39%, 36.90% 4.31%, 38.18% 2.60%,
+    39.67% 1.38%, 41.32% 0.76%, 43.08% 0.78%,
+    44.89% 1.41%, 46.68% 2.59%, 48.40% 4.17%
+  );
+}
+
+.fb-rank::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-conic-gradient(
+    rgba(255,255,255,.4) 0 3deg,
+    transparent 3deg 15deg
+  );
+}
+
+.fb-rank::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  z-index: -1;
+  border-radius: 50%;
+  background: inherit;
+  border: 1px solid rgba(255,255,255,.7);
+}
+
+.fb-rank.first {
+  background: var(--primary);
+}
+
+@media (max-width: 800px) {
+  .fb-search {
+    grid-template-columns: 1fr;
+  }
+
+  .fb-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .fb-map,
+  .fb-results {
+    height: 420px;
+  }
+
+  .fb-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 64px 20px 18px;
+  }
+
+  .fb-card-side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cg {
+    padding: 22px 16px;
+  }
+
+  .cg-profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
