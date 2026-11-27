@@ -1,0 +1,114 @@
+/* Log In / Register page */
+.auth {
+  padding: 50px 0 70px;
+}
+
+.auth-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 22px;
+  padding: 40px;
+  max-width: 620px;
+  margin: 0 auto;
+  box-shadow: 0 6px 24px rgba(0,0,0,.05);
+}
+
+.auth-card h1 {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.auth-card .auth-sub {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+.auth-card label.lbl {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.role {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+.role input {
+  display: block;
+  margin: 0 auto 8px;
+  accent-color: var(--primary);
+}
+
+.role strong {
+  display: block;
+  font-size: 14px;
+}
+
+.role span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.role.selected {
+  background: var(--pink);
+  border-color: var(--primary);
+}
+
+.auth-card a.red {
+  color: var(--primary);
+}
+
+.btn-auth {
+  display: block;
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: 999px;
+  box-shadow: 0 10px 20px rgba(183, 28, 28, .25);
+}
+
+.btn-auth:hover {
+  background: var(--primary);
+}
+
+.auth-switch {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+.auth-switch a {
+  color: var(--primary);
+}
+
+.forgot-link {
+  text-align: right;
+  font-size: 14px;
+  margin: -4px 0 18px;
+}
+
+.forgot-link a {
+  color: var(--primary);
+}
+
+.view[hidden] {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .auth-card {
+    padding: 28px 20px;
+  }
+}
