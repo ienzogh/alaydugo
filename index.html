@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AlayDugo – Isang Patak, Isang Buhay</title>
-  <link rel="icon" type="image/png" href="icons/alay_dugologo.png">
+  <link rel="icon" type="image/png" href="icons/favicon-circle.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,7 +29,7 @@
   <section class="hero">
     <div class="container">
       <div>
-        <span class="tagline">Isang Patak, Isang Buhay.</span>
+        <span class="tagline">Isang Patak, <em>Isang Buhay.</em></span>
         <h1>Donate Blood, <span>Save Lives.</span></h1>
         <p>AlayDugo connects generous blood donors with people who need life-saving blood. One donation can make a difference.</p>
         <div class="hero-buttons">
@@ -36,8 +37,13 @@
           <a href="need_blood.html" class="btn btn-outline">Need Blood?</a>
         </div>
       </div>
-      <div class="hero-img">
-        <img src="icons/blood_donation.png" alt="Blood donation">
+      <div class="hero-img scrapbook">
+        <figure class="polaroid">
+          <img src="icons/blood_donation.png" alt="Blood donation">
+          <figcaption>Every drop counts!</figcaption>
+        </figure>
+        <p class="sticky-note">Be someone's hero today</p>
+        <span class="stamp">Give Blood</span>
       </div>
     </div>
   </section>
@@ -88,12 +94,12 @@
   </section>
 
   <!-- Call to action -->
-  <section class="cta-section">
+  <section class="cta-section" id="cta">
     <div class="container">
       <div class="cta">
         <h2>Your Blood Can Save Someone's Life.</h2>
         <p>Join the AlayDugo community of volunteer donors. Registration takes only a few minutes.</p>
-        <a href="auth.html#register" class="btn btn-white" id="cta-register">Register</a>
+        <a href="auth.html#register" class="btn btn-white">Register</a>
       </div>
     </div>
   </section>

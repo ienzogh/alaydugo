@@ -466,7 +466,11 @@
       tr.appendChild(th);
       TYPES.forEach(function (d) {
         var ok = GIVES_TO[d].indexOf(r) !== -1;
-        var td = el("td", ok ? "yes" : "no", ok ? "✅" : "❌");
+        var td = el("td", ok ? "yes" : "no");
+        var mark = el("img");
+        mark.src = ok ? "icons/check.png" : "icons/wrong.png";
+        mark.alt = ok ? "Yes" : "No";
+        td.appendChild(mark);
         td.setAttribute("aria-label", r + " can" + (ok ? "" : "not") + " receive from " + d);
         tr.appendChild(td);
       });

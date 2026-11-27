@@ -80,10 +80,10 @@ if (registerLink && currentUser) {
   registerLink.parentNode.hidden = true;
 }
 
-// Home page: no Register button in the red banner once logged in
-var ctaRegister = document.getElementById("cta-register");
-if (ctaRegister && currentUser) {
-  ctaRegister.hidden = true;
+// Home page: hide the whole "Your Blood Can Save Someone's Life" banner once logged in
+var ctaSection = document.getElementById("cta");
+if (ctaSection && currentUser) {
+  ctaSection.hidden = true;
 }
 
 // Pages that need a login: show the content instead of the "Log in to continue" card
