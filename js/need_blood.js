@@ -128,26 +128,16 @@
     return 2 * R * Math.asin(Math.sqrt(x));
   }
 
-  // ---------- map (Leaflet + OpenStreetMap) ----------
+  // ---------- map (Leaflet + Esri tiles) ----------
   var map = null, layer = null;
   if (typeof L !== "undefined") {
     map = L.map("map", { scrollWheelZoom: false }).setView([center.lat, center.lng], 14);
-    // Map tiles: CARTO (works from any page). If it fails, switch to Esri street tiles.
-    var tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd", maxZoom: 19,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
+    // Map tiles: Esri street map (no key in the code)
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19,
+      attribution: "Tiles &copy; Esri and its data providers"
     }).addTo(map);
-    var failed = 0, switched = false;
-    tiles.on("tileerror", function () {
-      failed++;
-      if (failed > 3 && !switched) {
-        switched = true;
-        map.removeLayer(tiles);
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-          maxZoom: 19, attribution: "Tiles © Esri"
-        }).addTo(map);
-      }
-    });
+    map.attributionControl.setPrefix(false); // hides the "Leaflet" link and flag
     // scroll-wheel zoom only after the map is clicked, so the page can still scroll
     map.on("click", function () { map.scrollWheelZoom.enable(); });
     map.on("mouseout", function () { map.scrollWheelZoom.disable(); });

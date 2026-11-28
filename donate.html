@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Donate Now – AlayDugo</title>
   <link rel="icon" type="image/png" href="icons/favicon-circle.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/buttons.css">
   <link rel="stylesheet" href="css/navbar.css">
@@ -30,10 +31,10 @@
   </header>
 
   <div class="fade">
-    <section class="about-intro">
+    <section class="dn-intro">
       <div class="container">
-        <h1>Blood Donation Campaigns</h1>
-        <p>Find upcoming and ongoing donation drives and register to take part.</p>
+        <h1 id="dn-title" tabindex="-1">Become a Lifesaver Today</h1>
+        <p id="dn-sub">Check your eligibility in 60 seconds before booking a Cebu donation center.</p>
       </div>
     </section>
 
@@ -43,7 +44,7 @@
         <div class="gate-card">
           <div class="gate-icon"><img src="icons/lock_icon.png" alt="Locked"></div>
           <h2>Log in to continue</h2>
-          <p>To protect our users, searching is available to registered, signed-in members only. User phone numbers, emails and addresses are never shown.</p>
+          <p>To protect our users, booking is available to registered, signed-in members only. User phone numbers, emails and addresses are never shown.</p>
           <div class="gate-buttons">
             <a href="auth.html#login" class="btn btn-solid">Log In</a>
             <a href="auth.html#register" class="btn btn-ring">Register</a>
@@ -52,31 +53,169 @@
       </div>
     </section>
 
-    <section class="campaigns" id="protected" hidden>
+    <section class="dn" id="protected" hidden>
       <div class="container">
-        <div class="filters filters-camp">
-          <div>
-            <label for="search">Search</label>
-            <input type="text" id="search" placeholder="Title, venue or organizer">
-          </div>
-          <div>
-            <label for="city">Address</label>
-            <input type="text" id="city" placeholder="e.g. Yati, Liloan">
-          </div>
-          <div>
-            <label for="date">Date</label>
-            <input type="date" id="date">
-          </div>
-          <button type="button" class="btn btn-reset" id="reset-btn">Reset</button>
+
+        <!-- Progress -->
+        <ol class="dn-steps">
+          <li><button type="button" data-go="1"><b>1</b> Eligibility</button></li>
+          <li><button type="button" data-go="2"><b>2</b> Find a center</button></li>
+          <li><button type="button" data-go="3"><b>3</b> Schedule</button></li>
+        </ol>
+
+        <div class="dn-saved" id="saved-bar" hidden>
+          <span id="saved-text"></span>
+          <button type="button" class="dn-link" id="saved-view">View pass</button>
         </div>
 
-        <div class="camp-grid" id="camp-grid"></div>
-        <p class="donor-count" id="camp-empty" hidden>No campaigns found.</p>
+        <!-- Step 1: eligibility -->
+        <div class="dn-panel dn-card dn-check" id="step-1">
+          <div class="dn-check-grid">
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="12" r="8"/><path d="M4 40c0-10 6-17 14-17 4 0 7 1 9 4h-3v17H4z"/><path d="M27 29h18v15H27zm3 4v3h3v-3zm6 0v3h3v-3zm-6 5v3h3v-3zm6 0v3h3v-3z" fill-rule="evenodd"/></svg>
+              <span><strong>Age:</strong> 18–65 years old<small>Or 16–17 with parental consent</small></span>
+              <div class="dn-answers"></div>
+            </div>
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill-rule="evenodd" d="M10 4h28a6 6 0 0 1 6 6v28a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6V10a6 6 0 0 1 6-6zm2 17h24c-2-6-7-10-12-10s-10 4-12 10zm11-1 5-7 1.500 1-3.500 7z"/></svg>
+              <span><strong>Weight:</strong> At least 50 kg (110 lbs)</span>
+              <div class="dn-answers"></div>
+            </div>
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M3 18h5v14h37v12h-5v-6H8v6H3zM16 20a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm8 3h17a4 4 0 0 1 4 4v3H24zM27 4h13l-2 15h-9z"/></svg>
+              <span><strong>Rest &amp; Hydration:</strong> 5+ hrs sleep, no alcohol in 24h<small>Eat a light meal and drink water</small></span>
+              <div class="dn-answers"></div>
+            </div>
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M11 3h5v5h16V3h5v5h5v10H6V8h5zM6 21h36v6a12 12 0 0 0-16 17H6z"/><path fill-rule="evenodd" d="M36 27a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-6 10 4.500 4.500 8-8-2.500-2.500-5.500 5.500-2-2z"/></svg>
+              <span><strong>Last Donation:</strong> 3+ months ago or first-time donor</span>
+              <div class="dn-answers"></div>
+            </div>
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 43C10 33 3 25 3 16a11 11 0 0 1 21-5 11 11 0 0 1 21 5c0 9-7 17-21 27z"/><path d="M6 24h10l4-8 6 15 4-7h12" fill="none" stroke="#fff" stroke-width="3.500" stroke-linejoin="round"/></svg>
+              <span><strong>General Health:</strong> No fever, cough, or colds</span>
+              <div class="dn-answers"></div>
+            </div>
+            <div class="dn-item">
+              <input type="checkbox" class="dn-mark" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><circle cx="24" cy="24" r="20"/><path d="M10 10l28 28M31 11l6 6M34 14l-17 17-5 1 1-5 17-17M13 31l-4 4"/></g></svg>
+              <span><strong>Tattoos &amp; Piercings:</strong> None in past 12 months</span>
+              <div class="dn-answers"></div>
+            </div>
+          </div>
+
+          <div class="dn-result" id="elig-result" aria-live="polite">
+            <div>
+              <strong id="elig-title"></strong>
+              <span id="elig-text"></span>
+              <div class="dn-bar"><i id="elig-bar"></i></div>
+            </div>
+            <button type="button" class="dn-primary" id="to-centers">Find Donation Centers →</button>
+          </div>
+          <p class="dn-note">Completing this questionnaire or booking an appointment does not guarantee eligibility. Donation staff determine final eligibility during medical screening.</p>
+        </div>
+
+        <!-- Step 2: find a center -->
+        <div class="dn-panel" id="step-2" hidden>
+          <form class="dn-card dn-search" id="search-form">
+            <div>
+              <label for="blood">Your Blood Type</label>
+              <select id="blood">
+                <option value="">I don't know yet</option>
+                <option value="O-">O- (Universal Donor)</option>
+                <option>O+</option>
+                <option>A-</option>
+                <option>A+</option>
+                <option>B-</option>
+                <option>B+</option>
+                <option>AB-</option>
+                <option>AB+</option>
+              </select>
+            </div>
+            <div>
+              <label for="city">City or Municipality</label>
+              <div class="dn-city">
+                <input type="text" id="city" list="city-list" value="Cebu City" autocomplete="off">
+                <button type="submit" class="dn-ghost">Search</button>
+              </div>
+              <datalist id="city-list"></datalist>
+            </div>
+            <div>
+              <div class="dn-radius"><label for="radius">Search Radius</label><output id="radius-out">20 km</output></div>
+              <input type="range" id="radius" min="1" max="50" value="20">
+            </div>
+            <button type="button" class="dn-ghost dn-gps" id="gps">Use My GPS</button>
+          </form>
+          <p class="dn-error" id="search-error" role="alert" hidden></p>
+
+          <div class="dn-find">
+            <div>
+              <div class="dn-head"><h2>Donation Centers Map</h2><span id="map-note"></span></div>
+              <div id="map" class="dn-map"></div>
+            </div>
+            <div>
+              <div class="dn-head"><h2 id="center-count">Available Centers</h2><span>Ranked by nearest distance</span></div>
+              <div class="dn-list" id="center-list"></div>
+            </div>
+          </div>
+          <p class="dn-note">Distances are straight-line estimates. Call the site to confirm donation hours before you go. Mobile drives shown are samples.</p>
+        </div>
+
+        <!-- Step 3: schedule -->
+        <div class="dn-panel dn-schedule" id="step-3" hidden>
+          <form class="dn-card dn-form" id="book-form">
+            <h2>Appointment Details</h2>
+            <div class="dn-place">
+              <div><strong id="place-name"></strong><span id="place-address"></span></div>
+              <button type="button" class="dn-link" data-go="2">Change</button>
+            </div>
+
+            <h3>Select Date</h3>
+            <div class="dn-pills" id="date-pills"></div>
+            <h3>Preferred Timeslot</h3>
+            <div class="dn-pills" id="time-pills"></div>
+
+            <h3>Your Information</h3>
+            <input class="dn-input" id="f-name" placeholder="Full Name" aria-label="Full name" autocomplete="name" maxlength="60" required>
+            <input class="dn-input" id="f-email" type="email" placeholder="Email Address" aria-label="Email address" autocomplete="email" required>
+            <input class="dn-input" id="f-phone" type="tel" placeholder="Mobile Number (09XX XXX XXXX)" aria-label="Mobile number" autocomplete="tel" required>
+            <p class="dn-error" id="book-error" role="alert" hidden></p>
+            <button type="submit" class="dn-primary dn-wide">Confirm Donation Appointment</button>
+            <p class="dn-note">Completing the questionnaire or booking does not guarantee eligibility. Donation staff decide during medical screening. This is a prototype: nothing is saved or sent.</p>
+          </form>
+
+          <aside class="dn-side">
+            <div class="dn-pass">
+              <div class="dn-pass-top">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13z"/></svg>
+                ALAYDUGO • DONOR PASS
+              </div>
+              <dl>
+                <div><dt>Donor</dt><dd id="p-name"></dd></div>
+                <div><dt>Blood Type</dt><dd><span class="dn-type" id="p-blood"></span></dd></div>
+                <div><dt>Center</dt><dd id="p-center"></dd></div>
+                <div><dt>Date &amp; Time</dt><dd id="p-when"></dd></div>
+                <div><dt>Reference</dt><dd class="dn-ref" id="p-ref"></dd></div>
+              </dl>
+              <p id="p-foot"></p>
+            </div>
+            <div class="dn-pass-actions" id="pass-actions" hidden>
+              <button type="button" class="dn-primary" id="print-pass">Print / Save PDF</button>
+              <button type="button" class="dn-ghost" id="cancel-booking">Cancel appointment</button>
+            </div>
+          </aside>
+        </div>
+
       </div>
     </section>
   </div>
 
-  <!-- Confirm delete popup -->
+  <!-- Confirm popup -->
   <div class="modal" id="confirm-modal">
     <div class="modal-box confirm-box">
       <div class="modal-head">
@@ -85,7 +224,7 @@
       </div>
       <p id="confirm-text">Are you sure?</p>
       <div class="modal-actions">
-        <button type="button" class="btn modal-cancel">Cancel</button>
+        <button type="button" class="btn modal-cancel">Keep it</button>
         <button type="button" class="btn modal-send" id="confirm-yes">Yes</button>
       </div>
     </div>
@@ -115,6 +254,7 @@
     </div>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/script.js"></script>
   <script src="js/donate.js"></script>
 </body>
