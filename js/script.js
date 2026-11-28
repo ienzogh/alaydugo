@@ -107,13 +107,13 @@ function showToast(message) {
   }, 2600);
 }
 
-// Emergency SOS button (on every page) with one-tap hotlines
+// Emergency SOS button (on every page) with hotlines
 (function () {
   var HOTLINES = [
-    { name: "National Emergency Hotline", number: "911", tel: "911" },
-    { name: "Philippine Red Cross Hotline", number: "143", tel: "143" },
-    { name: "Red Cross Cebu Blood Bank", number: "(032) 253-4611", tel: "+63322534611" },
-    { name: "Vicente Sotto Memorial Medical Center", number: "(032) 253-9891", tel: "+63322539891" }
+    { name: "National Emergency Hotline", number: "911" },
+    { name: "Philippine Red Cross Hotline", number: "143" },
+    { name: "Red Cross Cebu Blood Bank", number: "(032) 253-4611" },
+    { name: "Vicente Sotto Memorial Medical Center", number: "(032) 253-9891" }
   ];
 
   var button = document.createElement("button");
@@ -131,13 +131,42 @@ function showToast(message) {
       '<p>Tap a number to call. If a life is in danger, call 911 first.</p>' +
       '<div class="sos-list">' +
         HOTLINES.map(function (h) {
-          return '<a href="tel:' + h.tel + '"><span>' + h.name + '</span><strong>' + h.number + '</strong></a>';
+          return '<a href="#" data-name="' + h.name + '" data-number="' + h.number + '"><span>' + h.name + '</span><strong>' + h.number + '</strong></a>';
         }).join("") +
       '</div>' +
     '</div>';
 
+  // Our own popup that replaces the browser's "Open this application?" prompt
+  var pop = document.createElement("div");
+  pop.className = "call-pop";
+  pop.setAttribute("role", "dialog");
+  pop.setAttribute("aria-labelledby", "call-pop-title");
+  pop.innerHTML =
+    '<h4 id="call-pop-title"></h4>' +
+    '<p></p>' +
+    '<div class="call-pop-actions">' +
+      '<button type="button" class="call-pop-close">Close</button>' +
+      '<button type="button" class="call-pop-copy">Copy number</button>' +
+    '</div>';
+
   document.body.appendChild(button);
   document.body.appendChild(box);
+  document.body.appendChild(pop);
+
+  var popTitle = pop.querySelector("h4");
+  var popText = pop.querySelector("p");
+  var copyBtn = pop.querySelector(".call-pop-copy");
+  var currentNumber = "";
+
+  function openPop(name, number) {
+    currentNumber = number;
+    popTitle.textContent = "Call " + name;
+    popText.textContent = "Please dial " + number + " on your phone.";
+    copyBtn.textContent = "Copy number";
+    pop.classList.add("show");
+  }
+
+  function closePop() { pop.classList.remove("show"); }
 
   function close() { box.classList.remove("open"); }
   button.addEventListener("click", function () { box.classList.add("open"); });
@@ -146,6 +175,29 @@ function showToast(message) {
     if (e.target === box) close();
   });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") close();
+    if (e.key === "Escape") {
+      if (pop.classList.contains("show")) closePop();
+      else close();
+    }
+  });
+
+  // Tapping a number shows our popup instead of opening an app
+  box.querySelector(".sos-list").addEventListener("click", function (e) {
+    var item = e.target.closest("a");
+    if (!item) return;
+    e.preventDefault();
+    openPop(item.dataset.name, item.dataset.number);
+  });
+
+  pop.querySelector(".call-pop-close").addEventListener("click", closePop);
+
+  copyBtn.addEventListener("click", function () {
+    try {
+      navigator.clipboard.writeText(currentNumber).then(function () {
+        copyBtn.textContent = "Copied!";
+      });
+    } catch (err) {
+      copyBtn.textContent = "Copy not supported";
+    }
   });
 })();
